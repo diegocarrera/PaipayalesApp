@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="texto_placeholder">#1f3b2508</color>
+    <color name="texto_sin_opac">#3b2508</color>
+</resources>

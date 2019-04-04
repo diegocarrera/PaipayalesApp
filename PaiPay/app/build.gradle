@@ -1,0 +1,33 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 'Trimble Navigation Limited:Trimble MCS APIs 4.1:16'
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.trimble.paipay"
+        minSdkVersion 16
+        targetSdkVersion 16
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    packagingOptions {
+    }
+}
+dependencies {
+    provided files(android.sdkDirectory.path +
+            '/add-ons/addon-trimble_mcs_apis_4_1-trimble_navigation_limited-16/libs/' +
+            'com.trimble.mcs.jar')
+    compile 'com.journeyapps:zxing-android-embedded:3.0.2@aar'
+    compile 'com.google.zxing:core:3.2.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile "com.android.support:support-core-utils:24.2.0"
+}
