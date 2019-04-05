@@ -87,3 +87,4 @@
             android:textColor="@color/texto_sin_opac" />
     </LinearLayout>
 </RelativeLayout>
+
