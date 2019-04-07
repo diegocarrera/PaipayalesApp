@@ -17,11 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.trimble.paipay.utils.Invariante;
 import com.trimble.paipay.utils.RequestApi;
 
 public class Login extends Activity {
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
-    private static final String MyPREFERENCES = "LoginPaipay";
     private String user, password;
     private int port = 9090;
     private String ip = "192.168.0.9";
@@ -51,7 +51,7 @@ public class Login extends Activity {
                 toast.setGravity(Gravity.TOP | Gravity.LEFT, 35, 440);
                 toast.show();
             } else {
-                SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString("user", user.toLowerCase());
                 editor.putString("ip", ip);
@@ -87,7 +87,7 @@ public class Login extends Activity {
                     .setCancelable(false)
                     .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogBox, int id) {
-                        SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedpreferences.edit();
                         editor.putString("ip", userInputIP.getText().toString().toLowerCase());
                         editor.putInt("port", Integer.parseInt(userInputPort.getText().toString()));
