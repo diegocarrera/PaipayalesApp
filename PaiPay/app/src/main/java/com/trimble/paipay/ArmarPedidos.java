@@ -54,7 +54,7 @@ public class ArmarPedidos extends Activity {
             JSONArray jsonarr = pedidos_json.getJSONArray("pedidos");
             for (int i = 0; i < jsonarr.length(); i++) {
                 JSONObject pedido = jsonarr.getJSONObject(i);
-                Date fecha = new SimpleDateFormat("dd/MM/yyyy").parse(pedido.getString("fecha"));
+                Date fecha = new SimpleDateFormat(Invariante.format_date).parse(pedido.getString("fecha"));
                 pedidos.add(new Pedido(fecha, pedido.getInt("codigo")));
             }
         }catch (Exception e) {
