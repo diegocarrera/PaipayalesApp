@@ -1,6 +1,8 @@
 package com.trimble.paipay;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,11 +14,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.trimble.paipay.adapters.DetallePedidoAdapter;
 import com.trimble.paipay.model.DetallePedido;
 import com.trimble.paipay.model.Pedido;
@@ -116,6 +118,34 @@ public class Info_pedido extends Activity {
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output1));
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
+
+    public void AsociarTag(View view){
+        final CharSequence colors[] = new CharSequence[] {"Lector Barcode","Lector RFID"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccione un método de lectura");
+        builder.setItems(colors, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(colors[which].equals("Lector Barcode")){
+                    IntentIntegrator integrator = new IntentIntegrator(Info_pedido.this);
+                    integrator.setCaptureActivity(CaptureActivityPortrait.class);
+                    integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+                    integrator.setPrompt("Escanea Codigo de Barra");
+                    integrator.setCameraId(0);  // Use a specific camera of the device
+                    integrator.setBeepEnabled(true);
+                    integrator.initiateScan();
+                }
+                else{
+                    Intent rfidIntent = new Intent(Info_pedido.this,registerRFID.class);
+                    rfidIntent.putExtra("estado","finalizado");
+                    startActivity(rfidIntent);
+                    finish();
+                }
+            }
+        });
+        builder.show();
     }
 
     @Override

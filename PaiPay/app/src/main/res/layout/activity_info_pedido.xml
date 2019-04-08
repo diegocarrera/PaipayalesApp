@@ -6,8 +6,9 @@
     android:background="@drawable/main_background">
 
     <TextView
-        android:text="TextView"
+        android:text="codigo"
         android:typeface="monospace"
+        android:textColor="@color/texto_sin_opac"
         android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:text="fecha"
+        android:textColor="@color/texto_sin_opac"
         android:textSize="16sp"
         android:layout_below="@id/editcodigo"
         android:inputType="date"
@@ -29,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="326dp"
         android:layout_below="@id/editfecha"
+        android:textColor="@color/texto_sin_opac"
         android:layout_marginBottom="10dp">
 
     </ListView>
