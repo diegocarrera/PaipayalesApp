@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background">
+
+    <TextView
+        android:text="TextView"
+        android:typeface="monospace"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editcodigo"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/editfecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textSize="16sp"
+        android:layout_below="@id/editcodigo"
+        android:inputType="date"
+        android:layout_marginBottom="10dp"/>
+
+    <ListView
+        android:id="@+id/listadetallepedidos"
+        android:layout_width="match_parent"
+        android:layout_height="326dp"
+        android:layout_below="@id/editfecha"
+        android:layout_marginBottom="10dp">
+
+    </ListView>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/asignarCodigo"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/color_botones"
+            android:layout_marginRight="1dp"
+            android:text="@string/asociar_tag" />
+
+        <Button
+            android:id="@+id/asociarFoto"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="tomarFotos"
+            android:background="@color/color_botones"
+            android:text="@string/asociar_foto" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/finalizar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_botones"
+        android:text="@string/finalizar" />
+
+</LinearLayout>
+
+
+
