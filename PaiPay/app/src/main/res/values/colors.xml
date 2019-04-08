@@ -3,4 +3,5 @@
     <color name="texto_placeholder">#1f3b2508</color>
     <color name="texto_sin_opac">#3b2508</color>
     <color name="opciones_menu">#402208</color>
+    <color name="color_botones">#547e1a</color>
 </resources>

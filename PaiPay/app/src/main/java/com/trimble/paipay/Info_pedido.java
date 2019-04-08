@@ -3,11 +3,19 @@ package com.trimble.paipay;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trimble.paipay.adapters.DetallePedidoAdapter;
 import com.trimble.paipay.model.DetallePedido;
@@ -19,17 +27,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Info_pedido extends Activity {
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Pedido pedido;
     TextView viewid_pedido, view_fecha;
     ListView listview_detalle_pedido;
     private ArrayList<DetallePedido> detalles_pedido = new ArrayList<DetallePedido>();
     private DetallePedidoAdapter detalles_pedidoadapter;
+
+    private File dir;
+    private File output1=null;
+    private File output2=null;
+    private Button asociarFoto;
+    private Button asociarTag;
+    private Button finalizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +92,14 @@ public class Info_pedido extends Activity {
                 e.printStackTrace();
             }
         }
+
+        dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),"/Etiquetador/");
+        dir.mkdirs();
+        asociarFoto = (Button) findViewById(R.id.asociarFoto);
+        output1 = new File(dir,"pos_"+".jpeg");
+        if(output1.exists()){
+            asociarFoto.setBackgroundResource(R.drawable.poste_taken);
+        }
     }
 
     @Override
@@ -81,5 +107,39 @@ public class Info_pedido extends Activity {
         super.onBackPressed();
         startActivity(new Intent(this, ArmarPedidos.class));
         finish();
+    }
+
+    public void tomarFotos(View view){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            output1=new File(dir, "pos_"+".jpeg");
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output1));
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch(requestCode){
+                case REQUEST_IMAGE_CAPTURE:
+                    final File file;
+                    //asociarFoto.setBackgroundResource(R.drawable.poste_taken);
+                    file = output1;
+                    try {
+                        Bitmap bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), Uri.fromFile(file));
+                        FileOutputStream out = new FileOutputStream(file);
+                        bm.compress(Bitmap.CompressFormat.JPEG, 45, out);
+                        out.close();
+                    } catch (Exception e) {
+                        //asociarFoto.setBackgroundResource(R.drawable.poste_taken);
+                        e.printStackTrace();
+                        Toast toast = Toast.makeText(Info_pedido.this, "Ocurrió un problema, intente de nuevo", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP | Gravity.LEFT, 25, 350);
+                        toast.show();
+                    }
+                    break;
+            }
+        }
     }
 }
