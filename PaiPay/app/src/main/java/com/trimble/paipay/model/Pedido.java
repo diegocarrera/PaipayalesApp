@@ -53,15 +53,18 @@ public class Pedido {
         RequestApi.set_network(ip, port);
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("estado", estado_pedidos);
+        JSONObject response = new JSONObject();
         try {
-            JSONObject response = RequestApi.request("/api/v1/pedidos/", "GET", parameters);
+            //estado, bodega.
+            response = RequestApi.request("/api/v1/pedidos/", "GET", parameters);
             if(response.getInt("response_code") == 200){
-                JSONObject json = new JSONObject(response.getString("data"));
-                return json;
+                //eliminar data
+                response.put("pedidos", new JSONObject(response.getString("data")));
             }
+            return response;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return response;
     }
 }

@@ -30,15 +30,15 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
         if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.activity_pedido_item, parent,false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.pedido_item, parent,false);
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.codigo = (TextView) convertView.findViewById(R.id.editcodigo);
             viewHolder.fecha = (TextView) convertView.findViewById(R.id.editfecha);
             convertView.setTag(viewHolder);
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
-        final Pedido currentPedido = this.pedidos.get(position);
-        holder.codigo.setText(currentPedido.getCodigo());
+        Pedido currentPedido = this.pedidos.get(position);
+        holder.codigo.setText(String.valueOf(currentPedido.getCodigo()));
         holder.fecha.setText(currentPedido.getFecha().toString());
         return convertView;
     }
