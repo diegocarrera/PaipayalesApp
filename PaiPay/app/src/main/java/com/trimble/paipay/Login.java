@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +24,7 @@ public class Login extends Activity {
     private String user, password;
     private int port = 9090;
     private String ip = "192.168.0.9";
+    private boolean test_mode = true;  //sacar test
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +39,22 @@ public class Login extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void verifyUser(View view) {
+    public void verificarUsuario(View view) {
         view.startAnimation(buttonClick);
         user = ((TextView) findViewById(R.id.user)).getText().toString();
         password = ((TextView) findViewById(R.id.password)).getText().toString();
+        if (!user.contains("@")){
+            Toast.makeText(this, "Correo no válido.", Toast.LENGTH_LONG).show();
+            return;
+        }
         if (!user.isEmpty() && !password.isEmpty()) {
             RequestApi.set_network(ip, port);
-            boolean auth = RequestApi.login("trabajador@paipay.com.ec", "1234567890a");
-            if (!auth) {
+            boolean auth = RequestApi.login(user, password);
+            if (test_mode){
+                Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_LONG).show();
+            }
+            if (!auth && !test_mode) {   //sacar test
                 Toast toast = Toast.makeText(this, "Usuario y/o contraseña incorrecta", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP | Gravity.LEFT, 35, 440);
                 toast.show();
             } else {
                 SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
@@ -56,15 +62,16 @@ public class Login extends Activity {
                 editor.putString("user", user.toLowerCase());
                 editor.putString("ip", ip);
                 editor.putInt("port", port);
+
+                editor.putBoolean("test_mode", test_mode); // sacar
+
                 editor.apply();
                 Intent intent = new Intent(Login.this, Menu.class);
                 startActivity(intent);
                 finish();
             }
         } else {
-            Toast toast = Toast.makeText(this, "Usuario y contraseña no pueden quedar en blanco", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP | Gravity.LEFT, 35, 440);
-            toast.show();
+            Toast.makeText(this, "Usuario y contraseña no pueden quedar en blanco", Toast.LENGTH_SHORT).show();
         }
     }
 

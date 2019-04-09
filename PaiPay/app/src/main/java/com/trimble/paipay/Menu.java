@@ -40,7 +40,7 @@ public class Menu extends Activity {
         SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         // recibir y pasar el user, para no iniciar sesion otra vez
-        editor.clear();
+        editor.clear(); // estoy es para que inicie sesion de nuevo y se borre lo anterior registrado
         editor.apply();
         startActivity(new Intent(this, Login.class));
         finish();
