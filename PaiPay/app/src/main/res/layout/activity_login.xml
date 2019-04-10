@@ -48,18 +48,17 @@
             android:ems="10"
             android:hint="@string/correo_electronico"
             android:inputType="textPersonName"
-            android:textColor="@color/texto_placeholder"
+            android:textColor="@color/texto_sin_opac"
             android:textSize="14.5dp" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="305dp"
             android:layout_height="wrap_content"
-            android:autoText="true"
+            android:textColor="@color/texto_sin_opac"
             android:ems="10"
             android:hint="@string/contrasena"
             android:inputType="textPassword"
-            android:textColor="@android:color/white"
             android:textSize="14.5dp" />
     </LinearLayout>
 

@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/editcodigo"
         android:textColor="@color/texto_sin_opac"
-        android:layout_weight="1"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:layout_marginBottom="35dp"/>
@@ -21,13 +20,11 @@
         android:textSize="17sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:ems="10"
         android:layout_below="@id/editcodigo"
         android:textColor="@color/texto_sin_opac"
         android:inputType="date"
         android:focusable="false"
-        android:focusableInTouchMode="false"
-        />
+        android:focusableInTouchMode="false" />
 
 </LinearLayout>
