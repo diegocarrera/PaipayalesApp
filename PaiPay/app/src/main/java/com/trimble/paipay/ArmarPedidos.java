@@ -19,6 +19,7 @@ import com.trimble.paipay.adapters.PedidoAdapter;
 import com.trimble.paipay.model.Pedido;
 import com.trimble.paipay.utils.Invariante;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,13 +39,13 @@ public class ArmarPedidos extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-            System.out.println("click en" + position);
             Intent intent = new Intent(ArmarPedidos.this, Info_pedido.class);
             Pedido tmp_pedido = pedidos.get(position);
             pedidos.clear();
             pedidoadapter.notifyDataSetChanged();
             intent.putExtra("id_pedido", tmp_pedido.getCodigo());
-            intent.putExtra("fecha",tmp_pedido.getFecha());
+            DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
+            intent.putExtra("fecha",dateFormat.format(tmp_pedido.getFecha()));
             intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
             startActivity(intent);
             finish();

@@ -45,8 +45,8 @@ public class Info_pedido extends Activity {
     private DetallePedidoAdapter detalles_pedidoadapter;
 
     private File dir;
-    private File output1=null;
-    private File output2=null;
+    private File output1 = null;
+    private File output2 = null;
     private Button asociarFoto;
     private Button asociarTag;
     private Button finalizar;
@@ -61,11 +61,12 @@ public class Info_pedido extends Activity {
         Intent intent = getIntent();
         if(intent.getIntExtra("id_pedido",0) != 0){
             int codigo = intent.getIntExtra("id_pedido",0);
+            System.out.println("recibido codigo");
             try {
                 Date fecha = new SimpleDateFormat(Invariante.format_date).parse(intent.getStringExtra("fecha"));
                 pedido = new Pedido(fecha, codigo);
-                viewid_pedido.setText(pedido.getCodigo());
-                view_fecha.setText(pedido.getFecha().toString());
+                viewid_pedido.setText( viewid_pedido.getText() + String.valueOf(pedido.getCodigo()));
+                view_fecha.setText(view_fecha.getText() + pedido.getFecha().toString());
                 listview_detalle_pedido = (ListView) findViewById(R.id.listadetallepedidos);
 
                 detalles_pedidoadapter = new DetallePedidoAdapter(this, detalles_pedido);
@@ -81,13 +82,26 @@ public class Info_pedido extends Activity {
                 SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
                 String ip = sharedpreferences.getString("ip","");
                 int port = sharedpreferences.getInt("port",0);
+                boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
                 JSONObject pedidos_json = DetallePedido.get_detalles_pedido(ip, port, pedido.getCodigo());
-                JSONArray jsonarr = pedidos_json.getJSONArray("detalles");
-                for (int i = 0; i < jsonarr.length(); i++) {
-                    JSONObject detalle_pedido = jsonarr.getJSONObject(i);
-                    Producto producto = new Producto(detalle_pedido.getString("nombre"), detalle_pedido.getString("categoria"));
-                    detalles_pedido.add(new DetallePedido(producto, detalle_pedido.getInt("precio")));
+                if(pedidos_json.getInt("response_code") == 200) {
+                    JSONArray jsonarr = pedidos_json.getJSONArray("detalles");
+                    for (int i = 0; i < jsonarr.length(); i++) {
+                        JSONObject detalle_pedido = jsonarr.getJSONObject(i);
+                        Producto producto = new Producto(detalle_pedido.getString("nombre"), detalle_pedido.getString("categoria"));
+                        detalles_pedido.add(new DetallePedido(producto, detalle_pedido.getInt("cantidad")));
+                    }
+                }else{
+                    Toast.makeText(this, pedidos_json.getString("error"), Toast.LENGTH_LONG).show();
+                    if (test_mode){
+                        Toast.makeText(this, "modo test", Toast.LENGTH_LONG).show();
+                        for (int i = 0; i < 5; i++) {
+                            Producto producto = new Producto("papa", "verdura");
+                            detalles_pedido.add(new DetallePedido(producto, i+1));
+                        }
+                    }
                 }
+                detalles_pedidoadapter.notifyDataSetChanged();
             } catch (ParseException e) {
                 e.printStackTrace();
             }catch (JSONException e) {
@@ -95,12 +109,12 @@ public class Info_pedido extends Activity {
             }
         }
 
-        dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),"/Etiquetador/");
+        dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),"/paipay/");
         dir.mkdirs();
         asociarFoto = (Button) findViewById(R.id.asociarFoto);
         output1 = new File(dir,"pos_"+".jpeg");
         if(output1.exists()){
-            asociarFoto.setBackgroundResource(R.drawable.poste_taken);
+            //asociarFoto.setBackgroundResource(R.drawable.armar_pedido);
         }
     }
 
@@ -128,21 +142,21 @@ public class Info_pedido extends Activity {
         builder.setItems(colors, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(colors[which].equals("Lector Barcode")){
-                    IntentIntegrator integrator = new IntentIntegrator(Info_pedido.this);
-                    integrator.setCaptureActivity(CaptureActivityPortrait.class);
-                    integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-                    integrator.setPrompt("Escanea Codigo de Barra");
-                    integrator.setCameraId(0);  // Use a specific camera of the device
-                    integrator.setBeepEnabled(true);
-                    integrator.initiateScan();
-                }
-                else{
-                    Intent rfidIntent = new Intent(Info_pedido.this,registerRFID.class);
-                    rfidIntent.putExtra("estado","finalizado");
-                    startActivity(rfidIntent);
-                    finish();
-                }
+            if(colors[which].equals("Lector Barcode")){
+                IntentIntegrator integrator = new IntentIntegrator(Info_pedido.this);
+                integrator.setCaptureActivity(CaptureActivityPortrait.class);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+                integrator.setPrompt("Escanea Codigo de Barra");
+                integrator.setCameraId(0);  // Use a specific camera of the device
+                integrator.setBeepEnabled(true);
+                integrator.initiateScan();
+            }
+            else{
+                Intent rfidIntent = new Intent(Info_pedido.this,registerRFID.class);
+                rfidIntent.putExtra("estado","finalizado");
+                startActivity(rfidIntent);
+                finish();
+            }
             }
         });
         builder.show();

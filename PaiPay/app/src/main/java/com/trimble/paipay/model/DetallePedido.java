@@ -37,15 +37,16 @@ public class DetallePedido {
         RequestApi.set_network(ip, port);
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("id_pedido", Integer.toString(id_pedido));
+        JSONObject response = new JSONObject();
         try {
-            JSONObject response = RequestApi.request("/api/v1/pedidos/", "GET", parameters);
+            response = RequestApi.request("/api/v1/pedidos/", "GET", parameters);
             if(response.getInt("response_code") == 200){
-                JSONObject json = new JSONObject(response.getString("data"));
-                return json;
+                response.put("pedido", new JSONObject(response.getString("data")));
+                return response;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return response;
     }
 }
