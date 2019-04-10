@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.trimble.paipay"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16" />
+
+    <uses-permission android:name="com.trimble.mcs.permission.ACCESS_FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
+    <uses-permission android:name="com.trimble.mcs.rfid.ACCESS_RFID" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:icon="@drawable/logo"
+        android:label="PaiPay">
+        <uses-library
+            android:name="com.trimble.mcs"
+            android:required="true" />
+
+        <activity android:name=".Login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Menu"
+            android:label="Menú" />
+        <activity
+            android:name=".ArmarPedidos"
+            android:label="@string/title_activity_armar_pedidos" />
+        <activity
+            android:name=".RfidActivity"
+            android:label="Verificar Tags" />
+        <activity
+            android:name=".Transferir"
+            android:hardwareAccelerated="false"
+            android:label="Transfiriendo postes" />
+        <activity
+            android:name=".registerRFID"
+            android:label="Registrar Tags" />
+        <activity
+            android:name=".Info_pedido"
+            android:label="@string/title_activity_info_pedido">
+        </activity>
+        <activity
+            android:name=".CaptureActivityPortrait"/>
+    </application>
+
+</manifest>

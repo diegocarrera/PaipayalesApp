@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: __local_jars__:/media/mdleiton/Respaldo/Android/Sdk/add-ons/addon-trimble_mcs_apis_4_1-trimble_navigation_limited-16/libs/com.trimble.mcs.jar:unspecified@jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../Android/Sdk/add-ons/addon-trimble_mcs_apis_4_1-trimble_navigation_limited-16/libs/com.trimble.mcs.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
