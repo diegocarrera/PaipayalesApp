@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background">
+
+    <TextView
+        android:text="@string/codigo_pedido"
+        android:typeface="monospace"
+        android:textColor="@color/texto_sin_opac"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editcodigo"
+        android:layout_margin="5dp"/>
+
+    <TextView
+        android:id="@+id/editfecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/fecha_pedido"
+        android:textColor="@color/texto_sin_opac"
+        android:textSize="16sp"
+        android:layout_below="@id/editcodigo"
+        android:inputType="date"
+        android:layout_margin="5dp"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/asignarCodigo"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:onClick="AsociarTag"
+            android:background="@color/color_botones"
+            android:layout_margin="5dp"
+            android:text="@string/asociar_tag" />
+
+        <Button
+            android:id="@+id/asociarFoto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:onClick="tomarFotos"
+            android:layout_margin="5dp"
+            android:background="@color/color_botones"
+            android:text="@string/asociar_foto" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listadetallepedidos"
+        android:layout_width="match_parent"
+        android:layout_height="269dp"
+        android:layout_below="@id/editfecha"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:textColor="@color/texto_sin_opac">
+
+    </ListView>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/finalizar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/color_botones"
+            android:text="@string/finalizar" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+
