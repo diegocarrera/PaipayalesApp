@@ -11,10 +11,20 @@ import java.util.Map;
 public class DetallePedido {
     private Producto producto;
     private float cantidad;
+    private boolean selected;
 
     public DetallePedido(Producto producto, float cantidad) {
         this.producto = producto;
         this.cantidad = cantidad;
+        selected = false;
+    }
+
+    public boolean is_selected() {
+        return selected;
+    }
+
+    public void set_selected(boolean selected) {
+        this.selected = selected;
     }
 
     public Producto getProducto() {
