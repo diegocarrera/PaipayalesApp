@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:onClick="tomarFotos"
+            android:onClick="tomarFoto"
             android:layout_margin="5dp"
             android:background="@color/color_botones"
             android:text="@string/asociar_foto" />
@@ -57,7 +57,7 @@
     <ListView
         android:id="@+id/listadetallepedidos"
         android:layout_width="match_parent"
-        android:layout_height="269dp"
+        android:layout_height="157dp"
         android:layout_below="@id/editfecha"
         android:layout_margin="5dp"
         android:clickable="true"
@@ -75,6 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:onClick="finalizar"
             android:background="@color/color_botones"
             android:text="@string/finalizar" />
 

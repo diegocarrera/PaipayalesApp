@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,7 +24,6 @@ import java.util.Date;
 public class ArmarPedidos extends Activity {
     private ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
     private PedidoAdapter pedidoadapter;
-    private InputMethodManager inputManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,19 @@ public class ArmarPedidos extends Activity {
         });
         pedidoadapter = new PedidoAdapter(this, pedidos);
         listview_pedido.setAdapter(pedidoadapter);
+        if (!update_list()){
+            System.out.println("error al actualizar la lista");
+        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, Menu.class));
+        finish();
+    }
+
+    boolean update_list(){
         try {
             SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
             String ip = sharedpreferences.getString("ip","");
@@ -66,6 +76,7 @@ public class ArmarPedidos extends Activity {
                         Date fecha = new SimpleDateFormat(Invariante.format_date).parse(pedido.getString("fecha"));
                         pedidos.add(new Pedido(fecha, pedido.getInt("codigo")));
                     }
+                    return true;
                 }else{
                     Toast.makeText(this, pedidos_json.getString("error"), Toast.LENGTH_LONG).show();
                     if (test_mode){
@@ -74,6 +85,7 @@ public class ArmarPedidos extends Activity {
                             pedidos.add(new Pedido(fecha, i+1));
                             pedidoadapter.notifyDataSetChanged();
                         }
+                        return true;
                     }
                 }
             }else{
@@ -81,15 +93,8 @@ public class ArmarPedidos extends Activity {
             }
             pedidoadapter.notifyDataSetChanged();
         }catch (Exception e) {
-            System.out.println("error");
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, Menu.class));
-        finish();
+        return false;
     }
 }

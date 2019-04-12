@@ -21,7 +21,6 @@ import ec.edu.espol.cvr.paipayapp.utils.RequestApi;
 
 public class Login extends Activity {
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
-    private String user, password;
     private int port = 9090;
     private String ip = "192.168.0.9";
     private boolean test_mode = true;  //sacar test
@@ -41,15 +40,15 @@ public class Login extends Activity {
 
     public void verificarUsuario(View view) {
         view.startAnimation(buttonClick);
-        user = ((TextView) findViewById(R.id.user)).getText().toString();
-        password = ((TextView) findViewById(R.id.password)).getText().toString();
-        if (!user.contains("@")){
+        String email = ((TextView) findViewById(R.id.user)).getText().toString();
+        String password = ((TextView) findViewById(R.id.password)).getText().toString();
+        if (!email.contains("@")){
             Toast.makeText(this, "Correo no válido.", Toast.LENGTH_LONG).show();
             return;
         }
-        if (!user.isEmpty() && !password.isEmpty()) {
+        if (!email.isEmpty() && !password.isEmpty()) {
             RequestApi.set_network(ip, port);
-            boolean auth = RequestApi.login(user, password);
+            boolean auth = RequestApi.login(email, password);
             if (test_mode){
                 Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_LONG).show();
             }
@@ -59,7 +58,7 @@ public class Login extends Activity {
             } else {
                 SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString("user", user.toLowerCase());
+                editor.putString("email", email.toLowerCase());
                 editor.putString("ip", ip);
                 editor.putInt("port", port);
 
@@ -92,7 +91,7 @@ public class Login extends Activity {
                 final EditText userInputPort = (EditText) mView.findViewById(R.id.userInputPort);
                 alertDialogBuilderUserInput
                     .setCancelable(false)
-                    .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogBox, int id) {
                         SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -101,7 +100,7 @@ public class Login extends Activity {
                         editor.apply();
                         }
                     })
-                    .setNegativeButton("Cancel",
+                    .setNegativeButton("Cancelar",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogBox, int id) {
                                 dialogBox.cancel();
