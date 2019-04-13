@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +19,6 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 import ec.edu.espol.cvr.paipayapp.utils.RequestApi;
 
 public class Login extends Activity {
-    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
     private int port = 9090;
     private String ip = "192.168.0.9";
     private boolean test_mode = true;  //sacar test
@@ -39,20 +37,20 @@ public class Login extends Activity {
     }
 
     public void verificarUsuario(View view) {
-        view.startAnimation(buttonClick);
         String email = ((TextView) findViewById(R.id.user)).getText().toString();
         String password = ((TextView) findViewById(R.id.password)).getText().toString();
         if (!email.contains("@")){
-            Toast.makeText(this, "Correo no válido.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Correo no válido.", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!email.isEmpty() && !password.isEmpty()) {
             RequestApi.set_network(ip, port);
-            boolean auth = RequestApi.login(email, password);
+            String rol = RequestApi.login(email, password);
             if (test_mode){
-                Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_SHORT).show();
+                rol = Invariante.USUARIO_ADMIN;
             }
-            if (!auth && !test_mode) {   //sacar test
+            if (rol == null && !test_mode) {   //sacar test
                 Toast toast = Toast.makeText(this, "Usuario y/o contraseña incorrecta", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
@@ -65,7 +63,16 @@ public class Login extends Activity {
                 editor.putBoolean("test_mode", test_mode); // sacar
 
                 editor.apply();
-                Intent intent = new Intent(Login.this, Menu.class);
+                Intent intent;
+
+                if (rol == Invariante.USUARIO_ADMIN){
+                    intent = new Intent(Login.this, MenuAdmin.class);
+                }else if (rol == Invariante.USUARIO_REPARTIDOR){
+                    intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+                }else{
+                    Toast toast = Toast.makeText(this, "Rol no disponible.", Toast.LENGTH_SHORT);
+                    return;
+                }
                 startActivity(intent);
                 finish();
             }

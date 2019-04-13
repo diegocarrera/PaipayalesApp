@@ -1,7 +1,6 @@
 package ec.edu.espol.cvr.paipayapp.utils;
 
 import android.os.NetworkOnMainThreadException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -26,19 +25,21 @@ public class RequestApi {
         server = "http://" + ip + ":" + port;
     }
 
-    public static boolean login(String email, String password){
+    public static String login(String email, String password){
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("email", email);
         parameters.put("password", password);
         try {
             JSONObject response = request("/api/v1/auth/login/", "POST", parameters);
             if(response.getInt("response_code") == 200){
-                return true;
+                JSONObject response_rol =  new JSONObject(response.getString("data"));
+                String rol = response_rol.getString("rol");
+                return rol;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     public static JSONObject request(String path, String type, Map<String, String> parameters){
@@ -52,11 +53,12 @@ public class RequestApi {
                 httpCon.setConnectTimeout(3000);
                 httpCon.setRequestProperty("Accept", "application/json");
                 httpCon.setDoOutput(true);
-
-                DataOutputStream out = new DataOutputStream(httpCon.getOutputStream());
-                out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
-                out.flush();
-                out.close();
+                if (parameters != null){
+                    DataOutputStream out = new DataOutputStream(httpCon.getOutputStream());
+                    out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+                    out.flush();
+                    out.close();
+                }
                 httpCon.connect();
 
                 int httpResponse = httpCon.getResponseCode();  // si es diferente de 0, deberia enviar error
