@@ -35,7 +35,7 @@ public class ArmarPedidos extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-            Intent intent = new Intent(ArmarPedidos.this, Info_pedido.class);
+            Intent intent = new Intent(ArmarPedidos.this, InfoPedidoAdmin.class);
             Pedido tmp_pedido = pedidos.get(position);
             pedidos.clear();
             pedidoadapter.notifyDataSetChanged();
@@ -49,26 +49,31 @@ public class ArmarPedidos extends Activity {
         });
         pedidoadapter = new PedidoAdapter(this, pedidos);
         listview_pedido.setAdapter(pedidoadapter);
-        if (!update_list()){
-            System.out.println("error al actualizar la lista");
-        }
+        update_list();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, Menu.class));
+        startActivity(new Intent(this, MenuAdmin.class));
         finish();
     }
 
-    boolean update_list(){
+    void update_list(){
         try {
             SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
             String ip = sharedpreferences.getString("ip","");
             int port = sharedpreferences.getInt("port",0);
+            String punto_reparto = sharedpreferences.getString("punto_reparto","");
             boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
             if(port != 0 && ip != ""){
-                JSONObject pedidos_json = Pedido.get_pedidos(ip, port, "POR EMPAQUETAR");
+                if (punto_reparto == "" && !test_mode){
+                    Toast.makeText(this, "No tiene configurado un punto de reparto. Debe configurar uno. ", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ArmarPedidos.this, ConfigPuntoRepartoAdmin.class);
+                    startActivity(intent);
+                    finish();
+                }
+                JSONObject pedidos_json = Pedido.get_pedidos(ip, port, "POR EMPAQUETAR", punto_reparto);
                 if(pedidos_json.getInt("response_code") == 200){
                     JSONArray jsonarr = pedidos_json.getJSONArray("pedidos");
                     for (int i = 0; i < jsonarr.length(); i++) {
@@ -76,7 +81,6 @@ public class ArmarPedidos extends Activity {
                         Date fecha = new SimpleDateFormat(Invariante.format_date).parse(pedido.getString("fecha"));
                         pedidos.add(new Pedido(fecha, pedido.getInt("codigo")));
                     }
-                    return true;
                 }else{
                     Toast.makeText(this, pedidos_json.getString("error"), Toast.LENGTH_LONG).show();
                     if (test_mode){
@@ -85,7 +89,6 @@ public class ArmarPedidos extends Activity {
                             pedidos.add(new Pedido(fecha, i+1));
                             pedidoadapter.notifyDataSetChanged();
                         }
-                        return true;
                     }
                 }
             }else{
@@ -95,6 +98,5 @@ public class ArmarPedidos extends Activity {
         }catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 }

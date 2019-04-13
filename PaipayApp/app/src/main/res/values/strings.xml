@@ -4,6 +4,7 @@
     <string name="cont_inv">Continuar como invitado</string>
     <string name="correo_electronico">Correo electrónico</string>
     <string name="contrasena">contraseña</string>
+
     <!-- activity_menu -->
     <string name="arm_pedido">ARMAR PEDIDO</string>
     <string name="consultar_pedido">CONSULTAR ESTADO PEDIDO</string>
@@ -18,7 +19,8 @@
     <string name="asociar_foto">Asociar foto</string>
     <string name="finalizar">Finalizar</string>
 
-
+    <!-- activity_config_punto_reparto_admin -->
+    <string name="punto_reparto">Seleccione un punto de reparto</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
