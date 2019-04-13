@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    android:orientation="vertical"
+    android:textColor="@color/opciones_menu"
+    tools:context="ec.edu.espol.cvr.paipayapp.ConfigPuntoRepartoAdmin">
+
+    <TextView
+        android:id="@+id/viewPuntoReparto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/punto_reparto"
+        android:textSize="16sp"
+        android:textColor="@color/opciones_menu"
+        android:layout_margin="10dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerPuntoReparto"
+        android:layout_width="fill_parent"
+        android:textSize="16sp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/opciones_menu"/>
+</LinearLayout>
