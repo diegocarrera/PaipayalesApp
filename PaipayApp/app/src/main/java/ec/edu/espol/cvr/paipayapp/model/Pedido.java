@@ -56,6 +56,7 @@ public class Pedido {
     public Pedido(Date fecha, int codigo) {
         this.fecha = fecha;
         this.codigo = codigo;
+        this.codigo_barra = null;
     }
 
     public Pedido(Date fecha, int codigo, ArrayList<DetallePedido> detallePedidos) {
@@ -88,15 +89,14 @@ public class Pedido {
         this.detallePedidos = detallePedidos;
     }
 
-
     /* operaciones con la API */
-    public static JSONObject get_pedidos(String ip, int port, String estado_pedidos){
+    public static JSONObject get_pedidos(String ip, int port, String estado_pedidos, String bodega){
         RequestApi.set_network(ip, port);
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("estado", estado_pedidos);
+        parameters.put("punto_reparto", bodega);
         JSONObject response = new JSONObject();
         try {
-            // enviar como parametros estado, bodega.
             response = RequestApi.request("/api/v1/pedidos/", "GET", parameters);
             if(response.getInt("response_code") == 200){
                 //eliminar data
@@ -109,8 +109,22 @@ public class Pedido {
         return response;
     }
 
-    public boolean update(){
-        //actualizar api
-        return true;
+    public boolean update(String ip, int port){
+        RequestApi.set_network(ip, port);
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("codigo_barra", this.codigo_barra);
+        parameters.put("codigo_pedido", String.valueOf(this.codigo));
+        parameters.put("estado", "ARMADO");
+        //FALTA ENVIAR FOTO
+        JSONObject response = new JSONObject();
+        try {
+            response = RequestApi.request("/api/v1/pedidos/", "PUT", parameters);
+            if(response.getInt("response_code") == 200){
+                return true;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

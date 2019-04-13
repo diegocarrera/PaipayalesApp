@@ -42,7 +42,6 @@ public class DetallePedidoAdapter extends ArrayAdapter<DetallePedido> {
             viewHolder.check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Checkbox "+position+" clicked!", Toast.LENGTH_SHORT).show();
                     if(detallesPedidos.get(position).is_selected()){
                         detallesPedidos.get(position).set_selected(false);
                         contador--;
@@ -52,17 +51,16 @@ public class DetallePedidoAdapter extends ArrayAdapter<DetallePedido> {
                     }
                 }
             });
-
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
         final DetallePedido currentPedido = this.detallesPedidos.get(position);
         holder.productoNombre.setText(currentPedido.getProducto().getName());
-        holder.cantidad.setText("cantidad: " + Float.toString(currentPedido.getCantidad()) );
+        holder.cantidad.setText("cantidad: " + Float.toString(currentPedido.getCantidad()) + " " + currentPedido.getProducto().getUnit() );
         holder.check.setChecked(currentPedido.is_selected());
         return convertView;
     }
 
-    public boolean armado_completo(){
+    public boolean armadoCompleto(){
         return contador == detallesPedidos.size();
     }
 }

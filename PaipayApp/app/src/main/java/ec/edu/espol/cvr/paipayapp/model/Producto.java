@@ -3,10 +3,17 @@ package ec.edu.espol.cvr.paipayapp.model;
 public class Producto {
     private String name;
     private String category;
+    private String unit;
 
     public Producto(String name, String category) {
         this.name = name;
         this.category = category;
+    }
+
+    public Producto(String name, String category, String unit) {
+        this.name = name;
+        this.category = category;
+        this.unit = unit;
     }
 
     public String getName() {
@@ -23,5 +30,13 @@ public class Producto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }
