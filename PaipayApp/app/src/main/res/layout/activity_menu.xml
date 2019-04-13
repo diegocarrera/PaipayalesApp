@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/main_background"
-    tools:context="ec.edu.espol.cvr.paipayapp.Menu">
+    tools:context="ec.edu.espol.cvr.paipayapp.MenuAdmin">
 
     <ImageButton
         android:id="@+id/img_armar_pedido"

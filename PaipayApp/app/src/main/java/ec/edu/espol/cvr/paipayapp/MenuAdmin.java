@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
-public class Menu extends Activity {
-    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
+public class MenuAdmin extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,14 +18,15 @@ public class Menu extends Activity {
     }
 
     public void armar_pedidos(View view){
-        view.startAnimation(buttonClick);
         Intent intent = new Intent(this, ArmarPedidos.class);
         startActivity(intent);
         finish();
     }
 
     public void consultar_pedido(View view){
-
+        Intent intent = new Intent(this, ConfigPuntoRepartoAdmin.class);
+        startActivity(intent);
+        finish();
     }
 
     public void opciones_bodega(View view){
@@ -39,8 +38,7 @@ public class Menu extends Activity {
         super.onBackPressed();
         SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        // recibir y pasar el user, para no iniciar sesion otra vez
-        editor.clear(); // estoy es para que inicie sesion de nuevo y se borre lo anterior registrado
+        editor.clear(); // o recibir y pasar el user, para no iniciar sesion otra vez?
         editor.apply();
         startActivity(new Intent(this, Login.class));
         finish();
