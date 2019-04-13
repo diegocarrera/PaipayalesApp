@@ -7,14 +7,17 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/check_box" />
+        android:id="@+id/check_box"
+        android:padding="0.1dp"
+        android:background="@color/color_botones" />
     <TextView
         android:id="@+id/editproductoNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="editproducto"
         android:layout_weight="1"
-        android:textColor="@color/texto_sin_opac" />
+        android:textColor="@color/texto_sin_opac"
+        android:layout_marginLeft="2dp"/>
 
     <TextView
         android:id="@+id/editproductoCantidad"

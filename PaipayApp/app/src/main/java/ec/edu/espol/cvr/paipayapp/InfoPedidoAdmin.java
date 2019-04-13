@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,13 +34,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Info_pedido extends Activity {
+public class InfoPedidoAdmin extends Activity {
     private Pedido pedido;
     private ArrayList<DetallePedido> detalles_pedido = new ArrayList<DetallePedido>();
     private DetallePedidoAdapter detalles_pedidoadapter;
-
-    private File dir;
+    private Button finalizar;
     private File foto_pedido = null;
+    private File dir;
+
+    private String ip;
+    private int port;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class Info_pedido extends Activity {
         setContentView(R.layout.activity_info_pedido);
         TextView viewid_pedido = (TextView) findViewById(R.id.editcodigo);
         TextView view_fecha = (TextView) findViewById(R.id.editfecha);
+        finalizar  = (Button) findViewById(R.id.finalizar);
 
         Intent intent = getIntent();
         if(intent.getIntExtra("id_pedido",0) != 0){
@@ -58,30 +62,10 @@ public class Info_pedido extends Activity {
                 viewid_pedido.setText( viewid_pedido.getText() + String.valueOf(pedido.getCodigo()));
                 view_fecha.setText(view_fecha.getText() + pedido.getFecha().toString());
                 ListView listview_detalle_pedido = (ListView) findViewById(R.id.listadetallepedidos);
-                listview_detalle_pedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        if(detalles_pedidoadapter.armado_completo()){
-                            //habilitar boton habilitar
-                            //cambiar borde del checkbox
-                        }else{
-                            //desabilitar
-                        }
-                    }
-                });
 
                 detalles_pedidoadapter = new DetallePedidoAdapter(this, detalles_pedido);
                 listview_detalle_pedido.setAdapter(detalles_pedidoadapter);
-                if (!update_list()){
-                    System.out.println("error al actualizar la lista");
-                }
-                dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),Invariante.path_fotos_pedidos);
-                dir.mkdirs();
-                foto_pedido = new File(dir,"pedido_" + pedido.getCodigo() + ".jpeg");
-                if(foto_pedido.exists()){   //hacer algo para saber que ya se tiene asociada la foto.
-                    //asociarFoto.setBackgroundResource(R.drawable.armar_pedido);
-                }
+                update_list();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -98,14 +82,14 @@ public class Info_pedido extends Activity {
     public void tomarFoto(View view){
         Intent tomar_foto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (tomar_foto.resolveActivity(getPackageManager()) != null) {
-            foto_pedido=new File(dir, "pedido_" + pedido.getCodigo() + ".jpeg");
+            foto_pedido = new File(dir, "pedido_" + pedido.getCodigo() + ".jpeg");
             tomar_foto.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(foto_pedido));
             startActivityForResult(tomar_foto, Invariante.REQUEST_IMAGE_CAPTURE);
         }
     }
 
     public void AsociarTag(View view){
-        IntentIntegrator integrator = new IntentIntegrator(Info_pedido.this);
+        IntentIntegrator integrator = new IntentIntegrator(InfoPedidoAdmin.this);
         integrator.setCaptureActivity(CaptureActivityPortrait.class);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
         integrator.setPrompt("Escanea el Código de Barra");
@@ -115,8 +99,18 @@ public class Info_pedido extends Activity {
     }
 
     public void finalizar(View view){
-        if(pedido.update()){
-            Toast.makeText(Info_pedido.this, "Ocurrió un problema, intente de nuevo.", Toast.LENGTH_SHORT).show();
+        if(detalles_pedidoadapter.armadoCompleto()){
+            if (pedido.getCodigo_barra() != null){
+                if(pedido.update(ip, port)){
+                    Toast.makeText(InfoPedidoAdmin.this, "Pedido armado y asignado correctamente.", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(InfoPedidoAdmin.this, "Ocurrió un problema, intente de nuevo.", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(InfoPedidoAdmin.this, "Falta asociar un código de barras(tag)..", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(InfoPedidoAdmin.this, "debe agregar todos los productos al pedido..", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -135,9 +129,9 @@ public class Info_pedido extends Activity {
                         pedido.setFoto_pedido(file);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(Info_pedido.this, "Ocurrió un problema, intente de nuevo.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InfoPedidoAdmin.this, "Ocurrió un problema, intente de nuevo.", Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(Info_pedido.this, "Foto asociada correctamente al pedido.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InfoPedidoAdmin.this, "Foto asociada correctamente al pedido.", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -145,45 +139,45 @@ public class Info_pedido extends Activity {
                         if(result.getContents() != null) {
                             String codigo_barra = result.getContents();
                             pedido.setCodigo_barra(codigo_barra);
-                            Toast.makeText(Info_pedido.this, "Codigo de barras asociado correctamente al pedido.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InfoPedidoAdmin.this, "Codigo de barras asociado correctamente al pedido.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(Info_pedido.this, "Ocurrió un problema, intente de nuevo.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InfoPedidoAdmin.this, "Ocurrió un problema, intente de nuevo.", Toast.LENGTH_SHORT).show();
                     }
             }
         }
     }
 
-    boolean update_list(){
+    void update_list(){
         try {
             SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
-            String ip = sharedpreferences.getString("ip", "");
-            int port = sharedpreferences.getInt("port", 0);
+            ip = sharedpreferences.getString("ip", "");
+            port = sharedpreferences.getInt("port", 0);
             boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
             JSONObject pedidos_json = DetallePedido.get_detalles_pedido(ip, port, pedido.getCodigo());
             if (pedidos_json.getInt("response_code") == 200) {
                 JSONArray jsonarr = pedidos_json.getJSONArray("detalles");
                 for (int i = 0; i < jsonarr.length(); i++) {
                     JSONObject detalle_pedido = jsonarr.getJSONObject(i);
-                    Producto producto = new Producto(detalle_pedido.getString("nombre"), detalle_pedido.getString("categoria"));
+                    Producto producto = new Producto(detalle_pedido.getString("nombre"), detalle_pedido.getString("categoria"), detalle_pedido.getString("unidad"));
                     detalles_pedido.add(new DetallePedido(producto, detalle_pedido.getInt("cantidad")));
                 }
-                return true;
             } else {
                 Toast.makeText(this, pedidos_json.getString("error"), Toast.LENGTH_LONG).show();
                 if (test_mode) {
                     Toast.makeText(this, "modo test", Toast.LENGTH_LONG).show();
                     for (int i = 0; i < 5; i++) {
-                        Producto producto = new Producto("papa", "verdura");
+                        Producto producto = new Producto("papa", "verdura", "libra");
                         detalles_pedido.add(new DetallePedido(producto, i + 1));
                     }
-                    return true;
                 }
             }
             detalles_pedidoadapter.notifyDataSetChanged();
+            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),Invariante.path_fotos_pedidos);
+            dir.mkdirs();
+            foto_pedido = new File(dir,"pedido_" + pedido.getCodigo() + ".jpeg");
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        return false;
     }
 }
