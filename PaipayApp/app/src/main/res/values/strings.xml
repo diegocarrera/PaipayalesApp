@@ -22,10 +22,16 @@
     <!-- activity_config_punto_reparto_admin -->
     <string name="punto_reparto">Seleccione un punto de reparto</string>
 
+    <!-- activity_consultar_estado_pedido -->
+    <string name="pedidoConsultar">Ingrese el código del pedido</string>
+    <string name="pedidoConsultarInput">código del pedido</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_armar_pedidos">Armar pedidos</string>
     <string name="title_activity_pedido_item">Detalle pedido</string>
     <string name="title_activity_info_pedido">Información pedido</string>
+    <string name="title_activity_consultar_estado_pedido">ConsultarEstadoPedido</string>
 
 </resources>

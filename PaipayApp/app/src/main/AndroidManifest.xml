@@ -34,9 +34,13 @@
             android:label="@string/title_activity_armar_pedidos" />
         <activity
             android:name=".InfoPedidoAdmin"
-            android:label="@string/title_activity_info_pedido"></activity>
+            android:label="@string/title_activity_info_pedido" />
         <activity android:name=".CaptureActivityPortrait" />
-        <activity android:name=".ConfigPuntoRepartoAdmin"></activity>
+        <activity android:name=".ConfigPuntoRepartoAdmin" />
+        <activity
+            android:name=".ConsultarEstadoPedido"
+            android:label="@string/title_activity_consultar_estado_pedido"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
