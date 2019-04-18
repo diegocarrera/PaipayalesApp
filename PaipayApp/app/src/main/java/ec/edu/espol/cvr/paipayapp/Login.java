@@ -45,6 +45,7 @@ public class Login extends Activity {
         }
         if (!email.isEmpty() && !password.isEmpty()) {
             RequestApi.set_network(ip, port);
+            //devolver token y rol. guardar tambien ID de usuario
             String rol = RequestApi.login(email, password);
             if (test_mode){
                 Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_SHORT).show();
