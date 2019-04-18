@@ -16,12 +16,13 @@
         android:text="@string/punto_reparto"
         android:textSize="16sp"
         android:textColor="@color/opciones_menu"
-        android:layout_margin="10dp"/>
+        android:layout_margin="15dp"/>
 
     <Spinner
         android:id="@+id/spinnerPuntoReparto"
         android:layout_width="fill_parent"
         android:textSize="16sp"
         android:layout_height="wrap_content"
-        android:textColor="@color/opciones_menu"/>
+        android:textColor="@color/opciones_menu"
+        android:layout_marginHorizontal="15dp"/>
 </LinearLayout>
