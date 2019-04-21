@@ -16,6 +16,15 @@ public class Pedido {
     private File foto_pedido;
     private String codigo_barra;
     private String user;
+    private String repartidor;
+
+    public String getRepartidor() {
+        return repartidor;
+    }
+
+    public void setRepartidor(String repartidor) {
+        this.repartidor = repartidor;
+    }
 
     public String getEstado() {
         return estado;
@@ -52,6 +61,11 @@ public class Pedido {
     }
 
     private ArrayList<DetallePedido> detallePedidos;
+
+    public Pedido(int codigo) {
+        this.codigo = codigo;
+        this.codigo_barra = null;
+    }
 
     public Pedido(Date fecha, int codigo) {
         this.fecha = fecha;
@@ -126,5 +140,23 @@ public class Pedido {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static Pedido consultar_pedido(int codigo, String ip, int port){
+        RequestApi.set_network(ip, port);
+        Pedido pedido = new Pedido(codigo);
+        JSONObject response = new JSONObject();
+        try {
+            response = RequestApi.request("/api/v1/pedidos/" + String.valueOf(codigo) , "GET", null);
+            if(response.getInt("response_code") == 200){
+                JSONObject pedidoData =  new JSONObject(response.getString("data"));
+                pedido.setEstado(pedidoData.getString("estado"));
+                pedido.setRepartidor(pedidoData.getString("repartidor"));
+                return pedido;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

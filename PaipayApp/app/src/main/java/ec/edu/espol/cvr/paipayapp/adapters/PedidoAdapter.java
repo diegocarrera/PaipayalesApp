@@ -38,8 +38,8 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
         Pedido currentPedido = this.pedidos.get(position);
-        holder.codigo.setText(String.valueOf(currentPedido.getCodigo()));
-        holder.fecha.setText(currentPedido.getFecha().toString());
+        holder.codigo.setText("Pedido #" + String.valueOf(currentPedido.getCodigo()));
+        holder.fecha.setText("Fecha : " + currentPedido.getFecha().toString());
         return convertView;
     }
 }
