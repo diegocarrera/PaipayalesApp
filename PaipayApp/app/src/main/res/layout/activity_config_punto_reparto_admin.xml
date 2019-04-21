@@ -4,6 +4,7 @@
     android:id="@+id/activity_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingVertical="25dp"
     android:background="@drawable/main_background"
     android:orientation="vertical"
     android:textColor="@color/opciones_menu"
@@ -14,15 +15,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/punto_reparto"
-        android:textSize="16sp"
+        android:textSize="19sp"
         android:textColor="@color/opciones_menu"
         android:layout_margin="15dp"/>
 
     <Spinner
         android:id="@+id/spinnerPuntoReparto"
         android:layout_width="fill_parent"
-        android:textSize="16sp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:background="@color/fondo_lista"
         android:textColor="@color/opciones_menu"
-        android:layout_marginHorizontal="15dp"/>
+        android:textSize="18sp"
+        android:padding="10dp"/>
 </LinearLayout>

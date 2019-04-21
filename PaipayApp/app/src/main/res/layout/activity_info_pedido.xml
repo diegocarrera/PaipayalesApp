@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingVertical="25dp"
     android:background="@drawable/main_background">
 
     <TextView
@@ -34,12 +35,12 @@
 
         <Button
             android:id="@+id/asignarCodigo"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:onClick="AsociarTag"
-            android:background="@color/color_botones"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/color_botones"
+            android:onClick="AsociarTag"
             android:text="@string/asociar_tag" />
 
         <Button
@@ -57,7 +58,7 @@
     <ListView
         android:id="@+id/listadetallepedidos"
         android:layout_width="match_parent"
-        android:layout_height="307dp"
+        android:layout_height="249dp"
         android:layout_below="@id/editfecha"
         android:layout_margin="5dp"
         android:clickable="true"
