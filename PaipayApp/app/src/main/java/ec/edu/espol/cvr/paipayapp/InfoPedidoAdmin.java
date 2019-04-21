@@ -38,6 +38,7 @@ public class InfoPedidoAdmin extends Activity {
     private Pedido pedido;
     private ArrayList<DetallePedido> detalles_pedido = new ArrayList<DetallePedido>();
     private DetallePedidoAdapter detalles_pedidoadapter;
+    SharedPreferences sharedpreferences;
     private Button finalizar;
     private File foto_pedido = null;
     private File dir;
@@ -49,6 +50,7 @@ public class InfoPedidoAdmin extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_pedido);
+        sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
         TextView viewid_pedido = (TextView) findViewById(R.id.editcodigo);
         TextView view_fecha = (TextView) findViewById(R.id.editfecha);
         finalizar  = (Button) findViewById(R.id.finalizar);
@@ -99,10 +101,14 @@ public class InfoPedidoAdmin extends Activity {
     }
 
     public void finalizar(View view){
+        boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
         if(detalles_pedidoadapter.armadoCompleto()){
             if (pedido.getCodigo_barra() != null){
-                if(pedido.update(ip, port)){
+                if(pedido.update(ip, port) || test_mode){
                     Toast.makeText(InfoPedidoAdmin.this, "Pedido armado y asignado correctamente.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, ArmarPedidos.class);
+                    startActivity(intent);
+                    finish();
                 }else{
                     Toast.makeText(InfoPedidoAdmin.this, "Ocurrió un problema, intente de nuevo.", Toast.LENGTH_SHORT).show();
                 }
@@ -150,7 +156,6 @@ public class InfoPedidoAdmin extends Activity {
 
     void update_list(){
         try {
-            SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
             ip = sharedpreferences.getString("ip", "");
             port = sharedpreferences.getInt("port", 0);
             boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
