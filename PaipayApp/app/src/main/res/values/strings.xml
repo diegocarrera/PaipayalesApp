@@ -9,7 +9,6 @@
     <string name="arm_pedido">ARMAR PEDIDO</string>
     <string name="consultar_pedido">CONSULTAR ESTADO PEDIDO</string>
     <string name="opciones_bodega">PUNTO DE REPARTO</string>
-
     <string name="selecciona_pedido">Selecciona un pedido:</string>
 
     <!-- activity_info_pedido -->
@@ -23,9 +22,12 @@
     <string name="punto_reparto">Seleccione un punto de reparto</string>
 
     <!-- activity_consultar_estado_pedido -->
-    <string name="pedidoConsultar">Ingrese el código del pedido</string>
+    <string name="pedidoConsultar">Ingrese el Código del pedido</string>
     <string name="pedidoConsultarInput">código del pedido</string>
-
+    <string name="errorConsultar">No se encontró información de ese pedido. \nRevise el código e intente nuevamente.</string>
+    <string name="pedidoEncontrado">"Pedido encontrado."</string>
+    <string name="estadoPedido">Estado pedido : </string>
+    <string name="RepartidorPedido">Repartidor Asignado : </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

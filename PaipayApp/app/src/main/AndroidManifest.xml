@@ -22,21 +22,27 @@
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MenuAdmin"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="Menú" />
         <activity
             android:name=".ArmarPedidos"
-            android:label="@string/title_activity_armar_pedidos" />
+            android:label="@string/title_activity_armar_pedidos"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".InfoPedidoAdmin"
-            android:label="@string/title_activity_info_pedido" />
-        <activity android:name=".CaptureActivityPortrait" />
-        <activity android:name=".ConfigPuntoRepartoAdmin" />
+            android:label="@string/title_activity_info_pedido"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".CaptureActivityPortrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ConfigPuntoRepartoAdmin"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ConsultarEstadoPedido"
             android:label="@string/title_activity_consultar_estado_pedido"
