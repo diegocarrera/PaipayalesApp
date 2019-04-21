@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 import ec.edu.espol.cvr.paipayapp.utils.RequestApi;
@@ -45,36 +49,44 @@ public class Login extends Activity {
         }
         if (!email.isEmpty() && !password.isEmpty()) {
             RequestApi.set_network(ip, port);
-            String rol = RequestApi.login(email, password);
-            if (test_mode){
-                Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_SHORT).show();
-                rol = Invariante.USUARIO_ADMIN;
-            }
-            if (rol == null && !test_mode) {   //sacar test
-                Toast toast = Toast.makeText(this, "Usuario y/o contraseña incorrecta", Toast.LENGTH_SHORT);
-                toast.show();
-            } else {
-                SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString("email", email.toLowerCase());
-                editor.putString("ip", ip);
-                editor.putInt("port", port);
-
-                editor.putBoolean("test_mode", test_mode); // sacar
-
-                editor.apply();
-                Intent intent;
-
-                if (rol == Invariante.USUARIO_ADMIN){
-                    intent = new Intent(Login.this, MenuAdmin.class);
-                }else if (rol == Invariante.USUARIO_REPARTIDOR){
-                    intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+            JSONObject respuesta = RequestApi.login(email, password);
+            try {
+                String rol;
+                if (test_mode){
+                    Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_SHORT).show();
+                    rol = Invariante.USUARIO_ADMIN;
                 }else{
-                    Toast toast = Toast.makeText(this, "Rol no disponible.", Toast.LENGTH_SHORT);
-                    return;
+                    rol = respuesta.getString("rol");
+                    String token = respuesta.getString("token");
                 }
-                startActivity(intent);
-                finish();
+                if (rol == null && !test_mode) {   //sacar test
+                    Toast toast = Toast.makeText(this, "Usuario y/o contraseña incorrecta", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("email", email.toLowerCase());
+                    editor.putString("ip", ip);
+                    editor.putInt("port", port);
+
+                    editor.putBoolean("test_mode", test_mode); // sacar
+
+                    editor.apply();
+                    Intent intent;
+
+                    if (rol == Invariante.USUARIO_ADMIN){
+                        intent = new Intent(Login.this, MenuAdmin.class);
+                    }else if (rol == Invariante.USUARIO_REPARTIDOR){
+                        intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+                    }else{
+                        Toast toast = Toast.makeText(this, "Rol no disponible.", Toast.LENGTH_SHORT);
+                        return;
+                    }
+                    startActivity(intent);
+                    finish();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         } else {
             Toast.makeText(this, "Usuario y contraseña no pueden quedar en blanco", Toast.LENGTH_SHORT).show();
@@ -97,22 +109,34 @@ public class Login extends Activity {
                 final EditText userInputIP = (EditText) mView.findViewById(R.id.userInputIp);
                 final EditText userInputPort = (EditText) mView.findViewById(R.id.userInputPort);
                 alertDialogBuilderUserInput
-                    .setCancelable(false)
-                    .setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialogBox, int id) {
-                        SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("ip", userInputIP.getText().toString().toLowerCase());
-                        editor.putInt("port", Integer.parseInt(userInputPort.getText().toString()));
-                        editor.apply();
-                        }
-                    })
-                    .setNegativeButton("Cancelar",
-                        new DialogInterface.OnClickListener() {
+                        .setCancelable(false)
+                        .setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogBox, int id) {
-                                dialogBox.cancel();
+                                String port = userInputPort.getText().toString();
+                                String ip = userInputIP.getText().toString();
+                                if (!port.isEmpty() && !ip.isEmpty()){
+                                    try{
+                                        int port_int = Integer.parseInt(port);
+                                        SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                                        editor.putString("ip", ip.toLowerCase());
+                                        editor.putInt("port", port_int);
+                                        editor.apply();
+                                        Toast.makeText(Login.this, "IP y puerto actualizados exitosamente. ", Toast.LENGTH_LONG).show();
+                                    }catch (Exception e){
+                                        Toast.makeText(Login.this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
+                                    }
+                                }else{
+                                    Toast.makeText(Login.this, "IP y/o puerto vacios. ", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        });
+                        })
+                        .setNegativeButton("Cancelar",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialogBox, int id) {
+                                        dialogBox.cancel();
+                                    }
+                                });
                 AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
                 alertDialogAndroid.show();
                 return true;

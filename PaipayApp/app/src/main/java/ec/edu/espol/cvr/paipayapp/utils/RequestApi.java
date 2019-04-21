@@ -25,21 +25,22 @@ public class RequestApi {
         server = "http://" + ip + ":" + port;
     }
 
-    public static String login(String email, String password){
+    public static JSONObject login(String email, String password){
+        JSONObject respuesta = new JSONObject();
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("email", email);
         parameters.put("password", password);
         try {
             JSONObject response = request("/api/v1/auth/login/", "POST", parameters);
             if(response.getInt("response_code") == 200){
-                JSONObject response_rol =  new JSONObject(response.getString("data"));
-                String rol = response_rol.getString("rol");
-                return rol;
+                JSONObject contenido =  new JSONObject(response.getString("data"));
+                respuesta.put("rol", contenido.getString("rol"));
+                respuesta.put("token", contenido.getString("token"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return respuesta;
     }
 
     public static JSONObject request(String path, String type, Map<String, String> parameters){
