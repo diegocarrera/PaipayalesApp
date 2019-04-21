@@ -17,6 +17,7 @@ public class MenuAdmin extends Activity {
         setContentView(R.layout.activity_menu);
     }
 
+
     public void armar_pedidos(View view){
         Intent intent = new Intent(this, ArmarPedidos.class);
         startActivity(intent);
@@ -24,13 +25,15 @@ public class MenuAdmin extends Activity {
     }
 
     public void consultar_pedido(View view){
-        Intent intent = new Intent(this, ConfigPuntoRepartoAdmin.class);
+        Intent intent = new Intent(this, ConsultarEstadoPedido.class);
         startActivity(intent);
         finish();
     }
 
     public void opciones_bodega(View view){
-
+        Intent intent = new Intent(this, ConfigPuntoRepartoAdmin.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -43,4 +46,5 @@ public class MenuAdmin extends Activity {
         startActivity(new Intent(this, Login.class));
         finish();
     }
+
 }
