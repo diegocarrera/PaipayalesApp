@@ -9,6 +9,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
@@ -29,30 +39,53 @@ public class ConsultarEstadoPedido extends Activity {
     }
 
     public void consultar_pedido(View view){
-        try{
-            String ip = sharedpreferences.getString("ip", "");
-            int port = sharedpreferences.getInt("port", 0);
-            boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
-            int pedido_id = Integer.parseInt(codigo.getText().toString());
-            Pedido pedidoConsultado = Pedido.consultar_pedido(pedido_id, ip, port);
-            if(pedidoConsultado == null && !test_mode){
-                infoPedido.setText(R.string.errorConsultar);
-                Toast.makeText(this, R.string.errorConsultar, Toast.LENGTH_SHORT).show();
-            }else{
-                if(test_mode){
-                    Toast.makeText(this, "Modo test activado", Toast.LENGTH_SHORT).show();
-                    infoPedido.setText("Pedido #1");
-                    estadoPedido.setText("Estado : SOLICITADO");
-                    repartidorPedido.setText("Repartidor: USER 1");
-                }else{
-                    Toast.makeText(this, R.string.pedidoEncontrado, Toast.LENGTH_SHORT).show();
-                    infoPedido.setText(R.string.codigo_pedido +  String.valueOf(pedidoConsultado.getCodigo()));
-                    estadoPedido.setText(R.string.estadoPedido + pedidoConsultado.getEstado());
-                    repartidorPedido.setText(R.string.RepartidorPedido + pedidoConsultado.getRepartidor());
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        String ip = sharedpreferences.getString("ip", "");
+        int port = sharedpreferences.getInt("port", 0);
+        boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
+        if(test_mode){
+            Toast.makeText(this, Invariante.PRUEBA, Toast.LENGTH_SHORT).show();
+            infoPedido.setText("Pedido #1");
+            estadoPedido.setText("Estado : SOLICITADO");
+            repartidorPedido.setText("Repartidor: USER 1");
+        }else{
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            String server = Invariante.get_server(ip, port);
+            String url = server+ "/api/v1/purchases/status/" + codigo.getText().toString();
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                System.out.println(response.toString());
+                                Toast.makeText(ConsultarEstadoPedido.this, R.string.pedidoEncontrado, Toast.LENGTH_SHORT).show();
+                                infoPedido.setText("Pedido #" +  String.valueOf(response.getInt("id")));
+                                estadoPedido.setText("Estado : " + String.valueOf(response.getInt("status"))); //cambiar por string
+                                //repartidorPedido.setText(R.string.RepartidorPedido + pedidoConsultado.getRepartidor());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                clean(Invariante.ERROR_LOGIN_RED);
+                                Toast.makeText(ConsultarEstadoPedido.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            try {
+                                int code = error.networkResponse.statusCode;
+                                JSONObject json = new JSONObject(new String(error.networkResponse.data));
+                                String message = "Error " + String.valueOf(code) + json.getString("message");
+                                Toast.makeText(ConsultarEstadoPedido.this, message, Toast.LENGTH_SHORT).show();
+                                clean("Error " + String.valueOf(code) + "\n" +  json.getString("message"));
+                            }catch (Exception e) {
+                                e.printStackTrace();
+                                clean(Invariante.ERROR_LOGIN_RED_ACCESO);
+                                Toast.makeText(ConsultarEstadoPedido.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            requestQueue.add(jsonObjectRequest);
         }
     }
 
@@ -61,5 +94,11 @@ public class ConsultarEstadoPedido extends Activity {
         super.onBackPressed();
         startActivity(new Intent(this, MenuAdmin.class));
         finish();
+    }
+
+    public void clean(String message){
+        infoPedido.setText(message);
+        estadoPedido.setText("");
+        repartidorPedido.setText("");
     }
 }
