@@ -24,7 +24,7 @@ import ec.edu.espol.cvr.paipayapp.utils.RequestApi;
 
 public class Login extends Activity {
     private int port = 9090;
-    private String ip = "192.168.0.9";
+    private String ip = "192.168.0.100";
     private boolean test_mode = true;  //sacar test
 
     @Override
@@ -48,43 +48,44 @@ public class Login extends Activity {
             return;
         }
         if (!email.isEmpty() && !password.isEmpty()) {
-            RequestApi.set_network(ip, port);
-            JSONObject respuesta = RequestApi.login(email, password);
             try {
-                String rol;
+                String rol = null, token=null;
                 if (test_mode){
                     Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_SHORT).show();
                     rol = Invariante.USUARIO_ADMIN;
                 }else{
-                    rol = respuesta.getString("rol");
-                    String token = respuesta.getString("token");
-                }
-                if (rol == null && !test_mode) {   //sacar test
-                    Toast toast = Toast.makeText(this, "Usuario y/o contraseña incorrecta", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else {
-                    SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString("email", email.toLowerCase());
-                    editor.putString("ip", ip);
-                    editor.putInt("port", port);
-
-                    editor.putBoolean("test_mode", test_mode); // sacar
-
-                    editor.apply();
-                    Intent intent;
-
-                    if (rol == Invariante.USUARIO_ADMIN){
-                        intent = new Intent(Login.this, MenuAdmin.class);
-                    }else if (rol == Invariante.USUARIO_REPARTIDOR){
-                        intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+                    RequestApi.set_network(ip, port);
+                    JSONObject respuesta = RequestApi.login(email, password);
+                    if(respuesta.getInt("response_code") == 200){
+                        rol = respuesta.getString("rol");
+                        token = respuesta.getString("access-token");
                     }else{
-                        Toast toast = Toast.makeText(this, "Rol no disponible.", Toast.LENGTH_SHORT);
-                        return;
+                        Toast.makeText(this, "ERROR:" + respuesta.getString("error"), Toast.LENGTH_SHORT).show();
                     }
-                    startActivity(intent);
-                    finish();
                 }
+                SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("email", email.toLowerCase());
+                editor.putString("ip", ip);
+                editor.putInt("port", port);
+                editor.putString("access-token", token);
+
+                editor.putBoolean("test_mode", test_mode); // sacar
+
+                editor.apply();
+
+                Intent intent;
+                if (rol == Invariante.USUARIO_ADMIN){
+                    intent = new Intent(Login.this, MenuAdmin.class);
+                }else if (rol == Invariante.USUARIO_REPARTIDOR){
+                    intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+                }else{
+                    Toast toast = Toast.makeText(this, "Rol no disponible.", Toast.LENGTH_SHORT);
+                    return;
+                }
+                startActivity(intent);
+                finish();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

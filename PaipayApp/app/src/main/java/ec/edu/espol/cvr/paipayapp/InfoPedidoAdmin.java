@@ -39,6 +39,7 @@ public class InfoPedidoAdmin extends Activity {
     private ArrayList<DetallePedido> detalles_pedido = new ArrayList<DetallePedido>();
     private DetallePedidoAdapter detalles_pedidoadapter;
     SharedPreferences sharedpreferences;
+    TextView viewid_pedido;
     private Button finalizar;
     private File foto_pedido = null;
     private File dir;
@@ -51,7 +52,7 @@ public class InfoPedidoAdmin extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_pedido);
         sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
-        TextView viewid_pedido = (TextView) findViewById(R.id.editcodigo);
+        viewid_pedido = (TextView) findViewById(R.id.editcodigo);
         TextView view_fecha = (TextView) findViewById(R.id.editfecha);
         finalizar  = (Button) findViewById(R.id.finalizar);
 
@@ -145,6 +146,7 @@ public class InfoPedidoAdmin extends Activity {
                         if(result.getContents() != null) {
                             String codigo_barra = result.getContents();
                             pedido.setCodigo_barra(codigo_barra);
+                            viewid_pedido.setText( viewid_pedido.getText() + " code:"+ codigo_barra);
                             Toast.makeText(InfoPedidoAdmin.this, "Codigo de barras asociado correctamente al pedido.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
