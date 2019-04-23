@@ -9,14 +9,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import ec.edu.espol.cvr.paipayapp.adapters.PedidoAdapter;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
+import java.nio.file.attribute.FileTime;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,13 +34,15 @@ import java.util.Date;
 public class ArmarPedidos extends Activity {
     private ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
     private PedidoAdapter pedidoadapter;
+    private  SharedPreferences sharedpreferences;
+    private ListView listview_pedido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_armar_pedidos);
 
-        ListView listview_pedido = (ListView) findViewById(R.id.listapedidos);
+        listview_pedido = (ListView) findViewById(R.id.listapedidos);
         listview_pedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -47,9 +59,25 @@ public class ArmarPedidos extends Activity {
             finish();
             }
         });
-        pedidoadapter = new PedidoAdapter(this, pedidos);
-        listview_pedido.setAdapter(pedidoadapter);
-        update_list();
+        sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+        boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
+
+        if (test_mode){
+            for (int i = 0; i < 3; i++) {
+                try {
+                    Date fecha = new SimpleDateFormat(Invariante.format_date).parse(i+"/03/2019");
+                    pedidos.add(new Pedido(fecha, i+1));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            pedidoadapter = new PedidoAdapter(this, pedidos);
+            pedidoadapter.notifyDataSetChanged();
+            listview_pedido.setAdapter(pedidoadapter);
+        }else{
+            update_list();
+        }
     }
 
     @Override
@@ -61,42 +89,64 @@ public class ArmarPedidos extends Activity {
 
     void update_list(){
         try {
-            SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
             String ip = sharedpreferences.getString("ip","");
             int port = sharedpreferences.getInt("port",0);
             String punto_reparto = sharedpreferences.getString("punto_reparto","");
-            boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
             if(port != 0 && ip != ""){
-                if (punto_reparto == "" && !test_mode){
-                    Toast.makeText(this, "No tiene configurado un punto de reparto. Debe configurar uno. ", Toast.LENGTH_LONG).show();
+                if (punto_reparto == ""){
+                    Toast.makeText(this, Invariante.ERROR_PUNTO_REPARTO, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(ArmarPedidos.this, ConfigPuntoRepartoAdmin.class);
                     startActivity(intent);
                     finish();
                 }
-                JSONObject pedidos_json = Pedido.get_pedidos(ip, port, "POR EMPAQUETAR", punto_reparto);
-                if(pedidos_json.getInt("response_code") == 200){
-                    JSONArray jsonarr = pedidos_json.getJSONArray("pedidos");
-                    for (int i = 0; i < jsonarr.length(); i++) {
-                        JSONObject pedido = jsonarr.getJSONObject(i);
-                        Date fecha = new SimpleDateFormat(Invariante.format_date).parse(pedido.getString("fecha"));
-                        pedidos.add(new Pedido(fecha, pedido.getInt("codigo")));
-                    }
-                }else{
-                    Toast.makeText(this, pedidos_json.getString("error"), Toast.LENGTH_LONG).show();
-                    if (test_mode){
-                        for (int i = 0; i < 3; i++) {
-                            Date fecha = new SimpleDateFormat(Invariante.format_date).parse(i+"/03/2019");
-                            pedidos.add(new Pedido(fecha, i+1));
-                            pedidoadapter.notifyDataSetChanged();
-                        }
-                    }
-                }
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                String server = Invariante.get_server(ip, port);
+                String url = server + "/api/v1/purchases/query?status=0&idCenter=" + punto_reparto.split("-")[0];
+                JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                try {
+                                    for (int i = 0; i < response.length(); i++) {
+                                        JSONObject pedido = response.getJSONObject(i);
+                                        String filter = pedido.getString("dateCreated");
+                                        Date fecha = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS").parse(filter);
+                                        pedidos.add(new Pedido(fecha, pedido.getInt("id")));
+                                    }
+                                    pedidoadapter = new PedidoAdapter(ArmarPedidos.this, pedidos);
+                                    listview_pedido.setAdapter(pedidoadapter);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ArmarPedidos.this, "Error al procesar respuesta", Toast.LENGTH_SHORT).show();
+                                }catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ArmarPedidos.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                try {
+                                    int code = error.networkResponse.statusCode;
+                                    JSONObject json = new JSONObject(new String(error.networkResponse.data));
+                                    String message = "Error " + String.valueOf(code) + json.getString("message");
+                                    Toast.makeText(ArmarPedidos.this, message, Toast.LENGTH_SHORT).show();
+                                }catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ArmarPedidos.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                requestQueue.add(jsonObjectRequest);
             }else{
-                Toast.makeText(this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, Invariante.CONF_ERROR_1, Toast.LENGTH_LONG).show();
             }
-            pedidoadapter.notifyDataSetChanged();
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+
+
