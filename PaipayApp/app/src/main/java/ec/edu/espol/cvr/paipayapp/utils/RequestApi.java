@@ -31,11 +31,16 @@ public class RequestApi {
         parameters.put("email", email);
         parameters.put("password", password);
         try {
-            JSONObject response = request("/api/v1/auth/login/", "POST", parameters);
+            JSONObject response = request("/api/v1/auth/login", "POST", parameters);
+            respuesta.put("response_code", response.getInt("response_code"));
             if(response.getInt("response_code") == 200){
                 JSONObject contenido =  new JSONObject(response.getString("data"));
                 respuesta.put("rol", contenido.getString("rol"));
-                respuesta.put("token", contenido.getString("token"));
+                respuesta.put("access-token", contenido.getString("token"));
+            }else if(response.getInt("response_code") == 401 ||response.getInt("response_code") == 400 ){
+                respuesta.put("error", response.getString("message"));
+            }else{
+                respuesta.put("error", response.getString("error"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -48,13 +53,15 @@ public class RequestApi {
         String error = null;
         {
             try {
+                System.out.println(server + path);
                 url = new URL(server + path);
                 HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
                 httpCon.setRequestMethod(type);
-                httpCon.setConnectTimeout(3000);
+                httpCon.setConnectTimeout(10000);
                 httpCon.setRequestProperty("Accept", "application/json");
                 httpCon.setDoOutput(true);
                 if (parameters != null){
+
                     DataOutputStream out = new DataOutputStream(httpCon.getOutputStream());
                     out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
                     out.flush();
@@ -63,7 +70,6 @@ public class RequestApi {
                 httpCon.connect();
 
                 int httpResponse = httpCon.getResponseCode();  // si es diferente de 0, deberia enviar error
-
                 BufferedReader br = new BufferedReader(new InputStreamReader((httpCon.getInputStream())));
                 StringBuilder sb = new StringBuilder();
                 String output;
