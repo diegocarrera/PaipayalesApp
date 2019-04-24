@@ -19,7 +19,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
 public class ConsultarEstadoPedido extends Activity {

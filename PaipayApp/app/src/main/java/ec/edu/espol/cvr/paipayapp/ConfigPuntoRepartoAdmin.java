@@ -62,6 +62,7 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
         editor.putString(Invariante.PUNTO_REPARTO, item);
         editor.apply();
     }
+
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
     }

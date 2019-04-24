@@ -24,7 +24,6 @@ import ec.edu.espol.cvr.paipayapp.adapters.PedidoAdapter;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
-import java.nio.file.attribute.FileTime;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,7 +90,7 @@ public class ArmarPedidos extends Activity {
         try {
             String ip = sharedpreferences.getString("ip","");
             int port = sharedpreferences.getInt("port",0);
-            String punto_reparto = sharedpreferences.getString("punto_reparto","");
+            String punto_reparto = sharedpreferences.getString(Invariante.PUNTO_REPARTO,"");
             if(port != 0 && ip != ""){
                 if (punto_reparto == ""){
                     Toast.makeText(this, Invariante.ERROR_PUNTO_REPARTO, Toast.LENGTH_LONG).show();
@@ -111,14 +110,14 @@ public class ArmarPedidos extends Activity {
                                     for (int i = 0; i < response.length(); i++) {
                                         JSONObject pedido = response.getJSONObject(i);
                                         String filter = pedido.getString("dateCreated");
-                                        Date fecha = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS").parse(filter);
+                                        Date fecha = new SimpleDateFormat(Invariante.FORMAT_API_FECHA).parse(filter);
                                         pedidos.add(new Pedido(fecha, pedido.getInt("id")));
                                     }
                                     pedidoadapter = new PedidoAdapter(ArmarPedidos.this, pedidos);
                                     listview_pedido.setAdapter(pedidoadapter);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(ArmarPedidos.this, "Error al procesar respuesta", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ArmarPedidos.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
                                 }catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(ArmarPedidos.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
