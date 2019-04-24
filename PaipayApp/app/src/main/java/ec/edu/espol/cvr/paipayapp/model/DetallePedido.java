@@ -43,20 +43,4 @@ public class DetallePedido {
         this.cantidad = cantidad;
     }
 
-    public static JSONObject get_detalles_pedido(String ip, int port, int id_pedido){
-        RequestApi.set_network(ip, port);
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("id_pedido", Integer.toString(id_pedido));
-        JSONObject response = new JSONObject();
-        try {
-            response = RequestApi.request("/api/v1/pedidos/", "GET", parameters);
-            if(response.getInt("response_code") == 200){
-                response.put("pedido", new JSONObject(response.getString("data")));
-                return response;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
 }
