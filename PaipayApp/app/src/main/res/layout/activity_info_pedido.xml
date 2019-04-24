@@ -67,6 +67,32 @@
     </ListView>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/viewRepartidor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/asociar_repartidor"
+            android:textSize="16sp"
+            android:textColor="@color/opciones_menu"/>
+
+        <Spinner
+            android:id="@+id/spinnerRepartidor"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:background="@color/fondo_lista"
+            android:textColor="@color/opciones_menu"
+            android:textSize="16sp"
+            android:padding="10dp"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

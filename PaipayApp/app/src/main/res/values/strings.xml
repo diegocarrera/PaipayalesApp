@@ -16,6 +16,7 @@
     <string name="fecha_pedido">Fecha pedido : </string>
     <string name="asociar_tag">Asociar etiqueta</string>
     <string name="asociar_foto">Asociar foto</string>
+    <string name="asociar_repartidor">Repartidor:</string>
     <string name="finalizar">Finalizar</string>
 
     <!-- activity_config_punto_reparto_admin -->
