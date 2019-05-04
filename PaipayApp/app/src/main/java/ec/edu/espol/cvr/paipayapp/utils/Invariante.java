@@ -47,5 +47,4 @@ public class Invariante {
     /* login -> roles de usuario*/
 
     public static final String TOKEN_PRUEBA = "token1";
-
 }

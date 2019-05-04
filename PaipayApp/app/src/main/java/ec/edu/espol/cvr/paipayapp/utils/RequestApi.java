@@ -49,7 +49,6 @@ public class RequestApi {
                 respuesta.put("error", response.getString("message"));
             }else{
                 respuesta.put("error", response.getString("error"));
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -178,5 +177,7 @@ public class RequestApi {
         }
         return json;
     }
+
+
 }
 

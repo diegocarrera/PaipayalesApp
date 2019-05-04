@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+<<<<<<< HEAD
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,11 +20,13 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import org.json.JSONObject;
 
 import ec.edu.espol.cvr.paipayapp.adapters.PedidoAdapter;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class ListarPedidosRepartidor extends Activity {
     /*
