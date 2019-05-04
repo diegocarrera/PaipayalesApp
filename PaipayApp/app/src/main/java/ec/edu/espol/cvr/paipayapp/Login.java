@@ -1,11 +1,13 @@
 package ec.edu.espol.cvr.paipayapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -25,12 +27,14 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ec.edu.espol.cvr.paipayapp.model.User;
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
 public class Login extends Activity {
+
     private int port = 5000;
-    private String ip = "192.168.0.9";
+    private String ip = "192.168.0.9"; //.8 maria belen
     private boolean test_mode = true;  //sacar test
     private SharedPreferences sharedpreferences;
 
@@ -72,6 +76,7 @@ public class Login extends Activity {
                 get_menu(rol);
             }else{
                 api_login(email, password);
+
             }
         } else {
             Toast.makeText(this, Invariante.ERROR_LOGIN_1, Toast.LENGTH_SHORT).show();
@@ -88,7 +93,7 @@ public class Login extends Activity {
         if (rol == Invariante.USUARIO_ADMIN){
             intent = new Intent(Login.this, MenuAdmin.class);
         }else if (rol == Invariante.USUARIO_REPARTIDOR){
-            intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+            intent = new Intent(Login.this, ListarPedidosRepartidor.class); // cambiar de activity
         }else{
             Toast.makeText(this, Invariante.ERROR_LOGIN_ROL, Toast.LENGTH_SHORT).show();
             return;
@@ -193,4 +198,6 @@ public class Login extends Activity {
                 return true;
         }
     }
+
+
 }

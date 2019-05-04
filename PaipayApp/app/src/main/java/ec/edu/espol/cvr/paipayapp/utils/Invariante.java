@@ -44,4 +44,8 @@ public class Invariante {
         return "http://" + ip + ":" + port;
     }
 
+    /* login -> roles de usuario*/
+
+    public static final String TOKEN_PRUEBA = "token1";
+
 }
