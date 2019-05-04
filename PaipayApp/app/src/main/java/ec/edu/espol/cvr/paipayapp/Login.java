@@ -34,8 +34,8 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 public class Login extends Activity {
 
     private int port = 5000;
-    private String ip = "192.168.0.9"; //.8 maria belen
-    private boolean test_mode = true;  //sacar test
+    private String ip = "192.168.0.8"; //.8 maria belen
+    private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
 
     @Override
@@ -66,6 +66,8 @@ public class Login extends Activity {
             return;
         }
         if (!email.isEmpty() && !password.isEmpty()) {
+            email = "beleng.c@hotmail.com";
+            password = "adminadmin";
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("email", email.toLowerCase());
             editor.apply();
@@ -116,8 +118,8 @@ public class Login extends Activity {
                         public void onResponse(JSONObject response) {
                             try {
                                 System.out.println(response.toString());
-                                //String rol = response.getString("rol");
-                                String rol = Invariante.USUARIO_ADMIN;
+                                String rol = response.getString("role");
+                                //String rol = Invariante.USUARIO_ADMIN;
                                 String token = response.getString(Invariante.TOKEN);
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.putString(Invariante.TOKEN, token);

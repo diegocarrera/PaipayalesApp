@@ -48,6 +48,10 @@
             android:name=".ConsultarEstadoPedido"
             android:label="@string/title_activity_consultar_estado_pedido"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ListarPedidosRepartidor"
+            android:label="@string/title_activity_consultar_estado_pedido"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

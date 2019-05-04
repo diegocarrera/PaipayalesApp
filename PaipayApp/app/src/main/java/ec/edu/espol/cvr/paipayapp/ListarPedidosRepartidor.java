@@ -9,17 +9,28 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import ec.edu.espol.cvr.paipayapp.adapters.PedidoAdapter;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
-
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListarPedidosRepartidor extends Activity {
     /*
@@ -73,30 +84,71 @@ public class ListarPedidosRepartidor extends Activity {
             SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
             String ip = sharedpreferences.getString("ip","");
             int port = sharedpreferences.getInt("port",0);
-            //String punto_reparto = sharedpreferences.getString("punto_reparto","");
-            String user_token = sharedpreferences.getString("token","");
+            final String user_token = sharedpreferences.getString("token","token1");
 
             boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
             if(port != 0 && ip != ""){
 
-                JSONObject pedidos_json = Pedido.get_pedidos_por_repartidor(ip, port, user_token); //TRABAJAR EN ESTA FUNCIONNNNNNNN
-                if(pedidos_json.getInt("response_code") == 200){
-                    JSONArray jsonarr = pedidos_json.getJSONArray("data");
-                    for (int i = 0; i < jsonarr.length(); i++) {
-                        JSONObject pedido = jsonarr.getJSONObject(i);
-                        Date fecha = new SimpleDateFormat(Invariante.format_date).parse(pedido.getString("dateCreated"));
-                        pedidos.add(new Pedido(fecha, pedido.getInt("id")));
+                //Armo el request
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                String server = Invariante.get_server(ip, port);
+                String new_path = server + "/tracks/api/v1/purchasesxworker";
+
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, new_path, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONArray pedidos_response = response.getJSONArray("data");
+
+                                    for (int i = 0; i < pedidos_response.length(); i++) {
+
+                                        JSONObject pedido = pedidos_response.getJSONObject(i);
+                                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                                        Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
+                                        System.out.println(fecha);
+
+                                        pedidos.add(new Pedido(fecha, pedido.getInt("id")));
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ListarPedidosRepartidor.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                try {
+                                    int code = error.networkResponse.statusCode;
+                                    JSONObject json = new JSONObject(new String(error.networkResponse.data));
+                                    String message = "Error " + String.valueOf(code) + json.getString("message");
+                                    Toast.makeText(ListarPedidosRepartidor.this, message, Toast.LENGTH_SHORT).show();
+                                }catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ListarPedidosRepartidor.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                {
+
+                    /**
+                     * Passing some request headers
+                     */
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        //headers.put("Content-Type", "application/json");
+                        headers.put("Authorization", user_token);
+                        return headers;
                     }
-                }else{
-                    Toast.makeText(this, pedidos_json.getString("error"), Toast.LENGTH_LONG).show();
-                    if (test_mode){
-                        for (int i = 0; i < 3; i++) {
-                            Date fecha = new SimpleDateFormat(Invariante.format_date).parse(i+"/03/2019");
-                            pedidos.add(new Pedido(fecha, i+1));
-                            pedidoadapter.notifyDataSetChanged();
-                        }
-                    }
-                }
+                };
+                requestQueue.add(jsonObjectRequest);
+
             }else{
                 Toast.makeText(this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
             }

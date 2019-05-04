@@ -13,7 +13,7 @@ public class Invariante {
     public static final String ERROR_LOGIN_ROL = "Rol no disponible.";
         //roles de usuario
     public static final String USUARIO_ADMIN = "Admin";
-    public static final String USUARIO_REPARTIDOR = "Repartidor";
+    public static final String USUARIO_REPARTIDOR = "2";
         //configuracion servidor
     public static final String CONF_ACTUALIZADO = "IP y puerto actualizados exitosamente. ";
     public static final String CONF_ERROR_1 = "IP y/o puerto del servidor no configurado. ";

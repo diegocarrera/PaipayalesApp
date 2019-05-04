@@ -20,7 +20,7 @@ public class RequestApi {
     private static String ip;
     private static int port;
     private static URL url;
-    static String server;
+    public static String server;
 
     public static void set_network(String ip, int port){
         ip = ip;
@@ -118,7 +118,8 @@ public class RequestApi {
         String error = null;
         {
             try {
-                url = new URL(server + path);
+                url = new URL( path);
+                System.out.println(path);
                 HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
                 httpCon.setRequestMethod(type);
                 httpCon.setConnectTimeout(3000);

@@ -42,5 +42,7 @@
     <string name="title_activity_pedido_item">Detalle pedido</string>
     <string name="title_activity_info_pedido">Información pedido</string>
     <string name="title_activity_consultar_estado_pedido">ConsultarEstadoPedido</string>
+    <string name="title_activity_listar_pedidos">Lista de pedidos</string>
+
 
 </resources>
