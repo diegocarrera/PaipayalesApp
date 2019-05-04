@@ -1,11 +1,13 @@
 package ec.edu.espol.cvr.paipayapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -15,13 +17,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ec.edu.espol.cvr.paipayapp.model.User;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 import ec.edu.espol.cvr.paipayapp.utils.RequestApi;
 
 public class Login extends Activity {
     private int port = 9090;
-    private String ip = "192.168.0.9";
-    private boolean test_mode = true;  //sacar test
+    private String ip = "192.168.0.8";
+    private boolean test_mode = false;  //sacar test
+    public User user=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +49,13 @@ public class Login extends Activity {
         }
         if (!email.isEmpty() && !password.isEmpty()) {
             RequestApi.set_network(ip, port);
-            //devolver token y rol. guardar tambien ID de usuario
-            String rol = RequestApi.login(email, password);
+            //obtengo los datos del usuario desde el servidor
+            User user = RequestApi.login(email, password);
             if (test_mode){
                 Toast.makeText(this, "Modo prueba activado.", Toast.LENGTH_SHORT).show();
-                rol = Invariante.USUARIO_ADMIN;
+                user = new User(Invariante.USUARIO_REPARTIDOR,Invariante.TOKEN);
             }
-            if (rol == null && !test_mode) {   //sacar test
+            if (user.getRol() == null || user.getToken()==null && !test_mode) {   //sacar test
                 Toast toast = Toast.makeText(this, "Usuario y/o contraseña incorrecta", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
@@ -60,16 +64,18 @@ public class Login extends Activity {
                 editor.putString("email", email.toLowerCase());
                 editor.putString("ip", ip);
                 editor.putInt("port", port);
-
+                //guardo los datos del usuario en las Shared Preferences
+                editor.putString("token",user.getToken());
                 editor.putBoolean("test_mode", test_mode); // sacar
 
                 editor.apply();
                 Intent intent;
 
-                if (rol == Invariante.USUARIO_ADMIN){
+                //Cambia de actividad de acuerdo al rol del usuario
+                if (user.getRol() == Invariante.USUARIO_ADMIN){
                     intent = new Intent(Login.this, MenuAdmin.class);
-                }else if (rol == Invariante.USUARIO_REPARTIDOR){
-                    intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+                }else if (user.getRol() == Invariante.USUARIO_REPARTIDOR){
+                    intent = new Intent(Login.this, ListarPedidosRepartidor.class);
                 }else{
                     Toast toast = Toast.makeText(this, "Rol no disponible.", Toast.LENGTH_SHORT);
                     return;
@@ -121,4 +127,6 @@ public class Login extends Activity {
                 return true;
         }
     }
+
+
 }

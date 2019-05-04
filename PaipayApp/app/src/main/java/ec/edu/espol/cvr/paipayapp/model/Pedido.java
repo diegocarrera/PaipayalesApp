@@ -17,6 +17,8 @@ public class Pedido {
     private String codigo_barra;
     private String user;
 
+
+
     public String getEstado() {
         return estado;
     }
@@ -101,6 +103,32 @@ public class Pedido {
             if(response.getInt("response_code") == 200){
                 //eliminar data
                 response.put("pedidos", new JSONObject(response.getString("data")));
+            }
+            return response;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+    public static JSONObject get_pedidos_por_repartidor(String ip, int port, String token) {
+        /*
+            Funcion que hace el requerimiento al servidor y obtiene los pedidos de un repartidor
+            headers:
+                HTTP_AUTHORIZATION : token
+            Respuesta: lista de pedidos. cada pedido tiene los atributos id y dateCreated
+            {data: [{id:1,dateCreated:2019-3-1},{id:2,dateCreated:2019-2-11},...]}
+
+        */
+        RequestApi.set_network(ip, port);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Authorization", token);
+        JSONObject response = new JSONObject();
+        try {
+            response = RequestApi.request_with_headers("api/v1/purchasesxworker", "GET",null,headers);
+            if(response.getInt("response_code") == 200){
+                //eliminar data
+                //response.put("pedidos", new JSONObject(response.getString("data")));
+                System.out.println(response);
             }
             return response;
         } catch (JSONException e) {

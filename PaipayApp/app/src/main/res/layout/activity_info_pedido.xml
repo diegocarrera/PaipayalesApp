@@ -77,13 +77,13 @@
             android:layout_margin="5dp"
             android:onClick="finalizar"
             android:background="@color/color_botones"
-            android:text="@string/finalizar" />
+            android:text="@string/finalizar"
+            android:enabled="false"/>
 
     </LinearLayout>
 
 
 
 </LinearLayout>
-
 
 

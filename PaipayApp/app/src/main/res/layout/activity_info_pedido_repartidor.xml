@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background">
+
+    <TextView
+        android:text="@string/codigo_pedido"
+        android:typeface="monospace"
+        android:textColor="@color/texto_sin_opac"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editcodigo"
+        android:layout_margin="5dp"/>
+    <TextView
+        android:text="Cliente: "
+        android:typeface="monospace"
+        android:textColor="@color/texto_sin_opac"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cliente_tv"
+        android:layout_margin="5dp"/>
+    <TextView
+        android:text="Fecha pedido:"
+        android:typeface="monospace"
+        android:textColor="@color/texto_sin_opac"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fechaPedido_tv"
+        android:layout_margin="5dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/iniciarRuta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/color_botones"
+            android:onClick="iniciarRuta"
+            android:text="@string/iniciarRuta" />
+
+        <Button
+            android:id="@+id/finalizarRuta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/color_botones"
+            android:onClick="asociarTag"
+            android:text="@string/finalizarRuta" />
+
+        <Button
+            android:id="@+id/cancelarRuta"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:onClick="AsociarTag"
+            android:background="@color/color_botones"
+            android:layout_margin="5dp"
+            android:text="@string/cancelarRuta" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+

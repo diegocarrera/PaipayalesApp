@@ -12,5 +12,6 @@ public class Invariante {
     /* login -> roles de usuario*/
     public static final String USUARIO_ADMIN = "Admin";
     public static final String USUARIO_REPARTIDOR = "Repartidor";
+    public static final String TOKEN = "token1";
 
 }
