@@ -111,14 +111,19 @@ public class Login extends Activity {
         try {
             parameters.put("email", email);
             parameters.put("password", password);
+            System.out.println(email);
+            System.out.println(password);
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-            String server = Invariante.get_server(ip, port);
+            final String server = Invariante.get_server(ip, port);
+            System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            System.out.println(server+"/api/v1/auth/login/");
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.POST,server+ "/api/v1/auth/login/" , parameters, new Response.Listener<JSONObject>() {
 
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
+
                                 System.out.println(response.toString());
                                 String rol = response.getString("role");
                                 //String rol = Invariante.USUARIO_ADMIN;

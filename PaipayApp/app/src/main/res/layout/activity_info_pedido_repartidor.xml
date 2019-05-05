@@ -33,6 +33,16 @@
         android:id="@+id/fechaPedido_tv"
         android:layout_margin="5dp"/>
 
+    <TextView
+        android:text="Dirección: "
+        android:typeface="monospace"
+        android:textColor="@color/texto_sin_opac"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/direccion_tv"
+        android:layout_margin="5dp"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,7 +72,8 @@
             android:layout_weight="1"
             android:background="@color/color_botones"
             android:onClick="asociarTag"
-            android:text="@string/finalizarRuta" />
+            android:text="@string/finalizarRuta"
+            android:enabled="false"/>
 
         <Button
             android:id="@+id/cancelarRuta"
@@ -72,7 +83,8 @@
             android:onClick="AsociarTag"
             android:background="@color/color_botones"
             android:layout_margin="5dp"
-            android:text="@string/cancelarRuta" />
+            android:text="@string/cancelarRuta"
+            android:enabled="false"/>
 
     </LinearLayout>
 

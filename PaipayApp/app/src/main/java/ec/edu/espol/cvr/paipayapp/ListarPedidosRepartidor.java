@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -44,13 +43,14 @@ public class ListarPedidosRepartidor extends Activity {
 
     private ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
     private PedidoAdapter pedidoadapter;
+    private ListView listview_pedido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_armar_pedidos);
 
-        ListView listview_pedido = (ListView) findViewById(R.id.listapedidos);
+        listview_pedido = (ListView) findViewById(R.id.listapedidos);
         listview_pedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -62,14 +62,14 @@ public class ListarPedidosRepartidor extends Activity {
                 intent.putExtra("id_pedido", tmp_pedido.getCodigo());
                 DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
                 intent.putExtra("fecha",dateFormat.format(tmp_pedido.getFecha()));
-                intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
+                //intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
                 startActivity(intent);
                 finish();
             }
         });
-        pedidoadapter = new PedidoAdapter(this, pedidos);
-        listview_pedido.setAdapter(pedidoadapter);
+
         update_list();
+
     }
 
     @Override
@@ -112,9 +112,10 @@ public class ListarPedidosRepartidor extends Activity {
                                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
                                         Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
                                         System.out.println(fecha);
-
                                         pedidos.add(new Pedido(fecha, pedido.getInt("id")));
                                     }
+                                    pedidoadapter = new PedidoAdapter(ListarPedidosRepartidor.this, pedidos);
+                                    listview_pedido.setAdapter(pedidoadapter);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -156,7 +157,7 @@ public class ListarPedidosRepartidor extends Activity {
             }else{
                 Toast.makeText(this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
             }
-            pedidoadapter.notifyDataSetChanged();
+            //pedidoadapter.notifyDataSetChanged();
         }catch (Exception e) {
             e.printStackTrace();
         }

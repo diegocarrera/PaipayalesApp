@@ -15,6 +15,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -28,8 +35,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ec.edu.espol.cvr.paipayapp.adapters.DetallePedidoAdapter;
+import ec.edu.espol.cvr.paipayapp.adapters.PedidoAdapter;
 import ec.edu.espol.cvr.paipayapp.model.DetallePedido;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.model.Producto;
@@ -40,9 +50,8 @@ public class InfoPedido extends Activity {
     private Button finalizar, cancelar, iniciar;
     private File foto_pedido = null;
     private File dir;
+    TextView view_cliente, view_direccion;
 
-    private String ip;
-    private int port;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +59,16 @@ public class InfoPedido extends Activity {
         setContentView(R.layout.activity_info_pedido_repartidor);
         TextView viewid_pedido = (TextView) findViewById(R.id.editcodigo);
         TextView view_fecha = (TextView) findViewById(R.id.fechaPedido_tv);
-        TextView view_cliente = (TextView) findViewById(R.id.cliente_tv);
+        view_cliente = (TextView) findViewById(R.id.cliente_tv);
+        view_direccion = (TextView) findViewById(R.id.direccion_tv);
+
 
         finalizar  = (Button) findViewById(R.id.finalizarRuta);
         cancelar  = (Button) findViewById(R.id.cancelarRuta);
         iniciar  = (Button) findViewById(R.id.iniciarRuta);
+        cancelar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+        finalizar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+
 
 
         Intent intent = getIntent();
@@ -65,7 +79,8 @@ public class InfoPedido extends Activity {
                 pedido = new Pedido(fecha, codigo);
                 viewid_pedido.setText( viewid_pedido.getText() + String.valueOf(pedido.getCodigo()));
                 view_fecha.setText(view_fecha.getText() + pedido.getFecha().toString());
-                view_cliente.setText(view_fecha.getText() + pedido.getUser().toString());
+               // Obtengo del servidor el nombre del cliente y otros datos del pedido...
+                obtener_info_pedido(codigo);
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -141,7 +156,7 @@ public class InfoPedido extends Activity {
         }
     }
 
-    public void iniciarRuta(){
+    public void iniciarRuta(View view){
         //funcion para mandar por POST la ubicación del usuario
         //debe verificar que se tiene encendido el GPS, caso contrario, encenderlo automaticamente
         //boton de iniciarRuta debe estar deshabilitado inicialmente
@@ -160,10 +175,108 @@ public class InfoPedido extends Activity {
         else{
             //cuando se inicia la ruta, el botón de iniciar se desactiva
             this.iniciar.setEnabled(false);
-            //y se activa el boton de finalizar ruta
+            this.iniciar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+
+            //y se activan los botones de finalizar y cancelar ruta
             this.finalizar.setEnabled(true);
+            this.finalizar.setBackgroundColor(getResources().getColor(R.color.color_botones));
+            this.cancelar.setEnabled(true);
+            this.cancelar.setBackgroundColor(getResources().getColor(R.color.color_botones));
+
             //hacer los requerimientos POST
         }
+    }
+
+    void obtener_info_pedido(int id){
+        /*
+        Funcion que hace un requerimiento al servidor para obtener datos de un pedido
+        Parametros: id del pedido
+        Respuesta:
+        {
+            "id": 1,
+            "products": "{}",
+            "barCode": "{}",
+            "totalPrice": 0,
+            "user": {
+                "name": "Belen GC",
+                "phoneNumber": "+5939688888888",
+                "address": "adfasdfsdaf",
+                "userZone": "zona1"
+            }
+        }
+
+        */
+        SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+        String ip = sharedpreferences.getString("ip","");
+        int port = sharedpreferences.getInt("port",0);
+
+        try {
+
+            if(port != 0 && ip != ""){
+
+                //Armo el request
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                String server = Invariante.get_server(ip, port);
+                String new_path = server + "/api/v1/purchases/info/"+id;
+                System.out.println("DENTRO DE OBTENER_INFO_PEDIDOOOOOO "+ new_path);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, new_path, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONObject user_dict = response.getJSONObject("user");
+                                    String client_name = user_dict.getString("name");
+                                    String direccion = user_dict.getString("address");
+
+                                    view_cliente.setText(view_cliente.getText()+client_name);
+                                    view_direccion.setText(view_direccion.getText()+direccion);
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                try {
+                                    int code = error.networkResponse.statusCode;
+                                    JSONObject json = new JSONObject(new String(error.networkResponse.data));
+                                    String message = "Error " + String.valueOf(code) + json.getString("message");
+                                    Toast.makeText(InfoPedido.this, message, Toast.LENGTH_SHORT).show();
+                                }catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                {
+
+                    /**
+                     * Passing some request headers
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        //headers.put("Content-Type", "application/json");
+                        headers.put("Authorization", user_token);
+                        return headers;
+                    }*/
+                };
+                requestQueue.add(jsonObjectRequest);
+
+            }else{
+                Toast.makeText(this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
+            }
+            //pedidoadapter.notifyDataSetChanged();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 

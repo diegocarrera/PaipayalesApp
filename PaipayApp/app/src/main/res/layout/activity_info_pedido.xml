@@ -45,12 +45,12 @@
 
         <Button
             android:id="@+id/asociarFoto"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:onClick="tomarFoto"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:background="@color/color_botones"
+            android:onClick="tomarFoto"
             android:text="@string/asociar_foto" />
 
     </LinearLayout>
