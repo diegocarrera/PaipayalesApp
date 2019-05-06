@@ -44,11 +44,18 @@ public class ListarPedidosRepartidor extends Activity {
     private ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
     private PedidoAdapter pedidoadapter;
     private ListView listview_pedido;
+    private SharedPreferences sharedpreferences;
+    private int port;
+    private String ip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_armar_pedidos);
+
+        sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+        ip = sharedpreferences.getString("ip", "");
+        port = sharedpreferences.getInt("port", 0);
 
         listview_pedido = (ListView) findViewById(R.id.listapedidos);
         listview_pedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -61,17 +68,30 @@ public class ListarPedidosRepartidor extends Activity {
                 pedidoadapter.notifyDataSetChanged();
                 intent.putExtra("id_pedido", tmp_pedido.getCodigo());
                 DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
-                intent.putExtra("fecha",dateFormat.format(tmp_pedido.getFecha()));
+                intent.putExtra("fecha", dateFormat.format(tmp_pedido.getFecha()));
                 //intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
                 startActivity(intent);
                 finish();
             }
         });
 
-        update_list();
-
+        boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
+        if (test_mode) {
+            for (int i = 0; i < 3; i++) {
+                try {
+                    Date fecha = new SimpleDateFormat(Invariante.format_date).parse(i + "/03/2019");
+                    pedidos.add(new Pedido(fecha, i + 1));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            pedidoadapter = new PedidoAdapter(this, pedidos);
+            pedidoadapter.notifyDataSetChanged();
+            listview_pedido.setAdapter(pedidoadapter);
+        } else {
+            update_list();
+        }
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -84,13 +104,8 @@ public class ListarPedidosRepartidor extends Activity {
             Hace un requerimiento al servidor usando Pedido.get_pedidos_por_repartidor()
              para traerse la lista de pedidos relacionados a un repartidor
         */
+        final String user_token = sharedpreferences.getString("token","token1");
         try {
-            SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
-            String ip = sharedpreferences.getString("ip","");
-            int port = sharedpreferences.getInt("port",0);
-            final String user_token = sharedpreferences.getString("token","token1");
-
-            boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
             if(port != 0 && ip != ""){
 
                 //Armo el request

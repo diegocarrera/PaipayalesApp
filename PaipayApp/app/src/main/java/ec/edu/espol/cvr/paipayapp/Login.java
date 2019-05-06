@@ -37,7 +37,7 @@ public class Login extends Activity {
 
     private int port = 5000;
     private String ip = "192.168.0.8"; //.8 maria belen
-    private boolean test_mode = false;  //sacar test
+    private boolean test_mode = true;  //sacar test
     private SharedPreferences sharedpreferences;
 
     @Override
@@ -76,11 +76,10 @@ public class Login extends Activity {
 
             if (test_mode){
                 Toast.makeText(this, Invariante.PRUEBA, Toast.LENGTH_SHORT).show();
-                String rol = Invariante.USUARIO_ADMIN;
+                String rol = Invariante.USUARIO_REPARTIDOR;
                 get_menu(rol);
             }else{
                 api_login(email, password);
-
             }
         } else {
             Toast.makeText(this, Invariante.ERROR_LOGIN_1, Toast.LENGTH_SHORT).show();
@@ -97,7 +96,7 @@ public class Login extends Activity {
         if (rol == Invariante.USUARIO_ADMIN){
             intent = new Intent(Login.this, MenuAdmin.class);
         }else if (rol == Invariante.USUARIO_REPARTIDOR){
-            intent = new Intent(Login.this, ListarPedidosRepartidor.class); // cambiar de activity
+            intent = new Intent(Login.this, ListarPedidosRepartidor.class);
         }else{
             Toast.makeText(this, Invariante.ERROR_LOGIN_ROL, Toast.LENGTH_SHORT).show();
             return;
