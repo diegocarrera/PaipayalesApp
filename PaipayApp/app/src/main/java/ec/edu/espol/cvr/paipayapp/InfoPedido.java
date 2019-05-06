@@ -91,7 +91,7 @@ public class InfoPedido extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, ArmarPedidos.class));
+        startActivity(new Intent(this, ListarPedidosRepartidor.class));
         finish();
     }
 
@@ -228,6 +228,10 @@ public class InfoPedido extends Activity {
                                     JSONObject user_dict = response.getJSONObject("user");
                                     String client_name = user_dict.getString("name");
                                     String direccion = user_dict.getString("address");
+                                    String codigo_barra = response.getString("barCode");
+                                    pedido.setUser(client_name);
+                                    pedido.setDireccion(direccion);
+                                    pedido.setCodigo_barra(codigo_barra);
 
                                     view_cliente.setText(view_cliente.getText()+client_name);
                                     view_direccion.setText(view_direccion.getText()+direccion);

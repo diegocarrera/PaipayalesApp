@@ -17,6 +17,34 @@ public class Pedido {
     private String codigo_barra;
     private String user;
     private String repartidor;
+    private String direccion;
+    private String estado;
+    private ArrayList<DetallePedido> detallePedidos;
+
+    public Pedido(int codigo) {
+        this.codigo = codigo;
+        this.codigo_barra = "";
+    }
+
+    public Pedido(Date fecha, int codigo) {
+        this.fecha = fecha;
+        this.codigo = codigo;
+        this.codigo_barra = "";
+    }
+
+    public Pedido(Date fecha, int codigo, ArrayList<DetallePedido> detallePedidos) {
+        this.fecha = fecha;
+        this.codigo = codigo;
+        this.detallePedidos = detallePedidos;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
     public String getRepartidor() {
         return repartidor;
@@ -26,10 +54,6 @@ public class Pedido {
         this.repartidor = repartidor;
     }
 
-
-
-
-
     public String getEstado() {
         return estado;
     }
@@ -37,8 +61,6 @@ public class Pedido {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
-    private String estado;
 
     public File getFoto_pedido() {
         return foto_pedido;
@@ -62,25 +84,6 @@ public class Pedido {
 
     public void setUser(String user) {
         this.user = user;
-    }
-
-    private ArrayList<DetallePedido> detallePedidos;
-
-    public Pedido(int codigo) {
-        this.codigo = codigo;
-        this.codigo_barra = null;
-    }
-
-    public Pedido(Date fecha, int codigo) {
-        this.fecha = fecha;
-        this.codigo = codigo;
-        this.codigo_barra = null;
-    }
-
-    public Pedido(Date fecha, int codigo, ArrayList<DetallePedido> detallePedidos) {
-        this.fecha = fecha;
-        this.codigo = codigo;
-        this.detallePedidos = detallePedidos;
     }
 
     public Date getFecha() {
