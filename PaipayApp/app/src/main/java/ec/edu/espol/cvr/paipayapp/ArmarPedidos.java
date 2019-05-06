@@ -110,7 +110,9 @@ public class ArmarPedidos extends Activity {
                                     for (int i = 0; i < response.length(); i++) {
                                         JSONObject pedido = response.getJSONObject(i);
                                         String filter = pedido.getString("dateCreated");
-                                        Date fecha = new SimpleDateFormat(Invariante.FORMAT_API_FECHA).parse(filter);
+                                        //Date fecha = new SimpleDateFormat(Invariante.FORMAT_API_FECHA).parse(filter);
+                                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                                        Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
                                         pedidos.add(new Pedido(fecha, pedido.getInt("id")));
                                     }
                                     pedidoadapter = new PedidoAdapter(ArmarPedidos.this, pedidos);

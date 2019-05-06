@@ -12,7 +12,7 @@ public class Invariante {
     public static final String ERROR_LOGIN_1 = "Usuario y contraseña no pueden quedar en blanco";
     public static final String ERROR_LOGIN_ROL = "Rol no disponible.";
         //roles de usuario
-    public static final String USUARIO_ADMIN = "Admin";
+    public static final String USUARIO_ADMIN = "0";
     public static final String USUARIO_REPARTIDOR = "2";
         //configuracion servidor
     public static final String CONF_ACTUALIZADO = "IP y puerto actualizados exitosamente. ";

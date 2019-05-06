@@ -36,8 +36,8 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 public class Login extends Activity {
 
     private int port = 5000;
-    private String ip = "192.168.0.8"; //.8 maria belen
-    private boolean test_mode = true;  //sacar test
+    private String ip = "172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
+    private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
 
     @Override
@@ -68,8 +68,8 @@ public class Login extends Activity {
             return;
         }
         if (!email.isEmpty() && !password.isEmpty()) {
-            email = "beleng.c@hotmail.com";
-            password = "adminadmin";
+            //email = "beleng.c@hotmail.com";
+            //password = "adminadmin";
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("email", email.toLowerCase());
             editor.apply();
@@ -93,9 +93,9 @@ public class Login extends Activity {
 
     public void get_menu(String rol){
         Intent intent;
-        if (rol == Invariante.USUARIO_ADMIN){
+        if (rol.equals(Invariante.USUARIO_ADMIN)){
             intent = new Intent(Login.this, MenuAdmin.class);
-        }else if (rol == Invariante.USUARIO_REPARTIDOR){
+        }else if (rol.equals(Invariante.USUARIO_REPARTIDOR)){
             intent = new Intent(Login.this, ListarPedidosRepartidor.class);
         }else{
             Toast.makeText(this, Invariante.ERROR_LOGIN_ROL, Toast.LENGTH_SHORT).show();
@@ -114,8 +114,7 @@ public class Login extends Activity {
             System.out.println(password);
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             final String server = Invariante.get_server(ip, port);
-            System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            System.out.println(server+"/api/v1/auth/login/");
+
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.POST,server+ "/api/v1/auth/login/" , parameters, new Response.Listener<JSONObject>() {
 
@@ -125,6 +124,7 @@ public class Login extends Activity {
 
                                 System.out.println(response.toString());
                                 String rol = response.getString("role");
+                                System.out.println("ROOOOOL"+ rol);
                                 //String rol = Invariante.USUARIO_ADMIN;
                                 String token = response.getString(Invariante.TOKEN);
                                 SharedPreferences.Editor editor = sharedpreferences.edit();

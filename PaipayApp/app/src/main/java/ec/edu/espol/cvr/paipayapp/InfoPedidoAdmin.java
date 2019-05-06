@@ -128,7 +128,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     public void update_repartidor(){
         if(ip!= "" && port != 0){
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-            String server = Invariante.get_server(ip, port) + "api/v1/users/delivery-men/";
+            String server = Invariante.get_server(ip, port) + "/api/v1/users/delivery-men/";
             JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
                     (Request.Method.GET, server, null, new Response.Listener<JSONArray>() {
 
@@ -254,7 +254,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         startActivity(intent);
         finish();
     }
-
+//URL: /purchases/info/aquivaelcodigo
     public void update_api(){
         JSONObject parameters = new JSONObject();
         try {
