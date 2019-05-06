@@ -26,6 +26,10 @@ public class Pedido {
         this.repartidor = repartidor;
     }
 
+
+
+
+
     public String getEstado() {
         return estado;
     }
@@ -102,4 +106,71 @@ public class Pedido {
     public void setDetallePedidos(ArrayList<DetallePedido> detallePedidos) {
         this.detallePedidos = detallePedidos;
     }
+
+    /* operaciones con la API */
+    public static JSONObject get_pedidos(String ip, int port, String estado_pedidos, String bodega){
+        RequestApi.set_network(ip, port);
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("estado", estado_pedidos);
+        parameters.put("punto_reparto", bodega);
+        JSONObject response = new JSONObject();
+        try {
+            response = RequestApi.request("/api/v1/pedidos/", "GET", parameters);
+            if(response.getInt("response_code") == 200){
+                //eliminar data
+                response.put("pedidos", new JSONObject(response.getString("data")));
+            }
+            return response;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+    public static JSONObject get_pedidos_por_repartidor(String ip, int port, String token) {
+        /*
+            Funcion que hace el requerimiento al servidor y obtiene los pedidos de un repartidor
+            headers:
+                HTTP_AUTHORIZATION : token
+            Respuesta: lista de pedidos. cada pedido tiene los atributos id y dateCreated
+            {data: [{id:1,dateCreated:2019-3-1},{id:2,dateCreated:2019-2-11},...]}
+
+        */
+        RequestApi.set_network(ip, port);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Authorization", token);
+        JSONObject response = new JSONObject();
+        try {
+            response = RequestApi.request_with_headers("api/v1/purchasesxworker", "GET",null,headers);
+            if(response.getInt("response_code") == 200){
+                //eliminar data
+                //response.put("pedidos", new JSONObject(response.getString("data")));
+                System.out.println(response);
+            }
+            return response;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+
+    public boolean update(String ip, int port){
+        RequestApi.set_network(ip, port);
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("codigo_barra", this.codigo_barra);
+        parameters.put("codigo_pedido", String.valueOf(this.codigo));
+        parameters.put("estado", "ARMADO");
+        //FALTA ENVIAR FOTO
+        JSONObject response = new JSONObject();
+        try {
+            response = RequestApi.request("/api/v1/pedidos/", "PUT", parameters);
+            if(response.getInt("response_code") == 200){
+                return true;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

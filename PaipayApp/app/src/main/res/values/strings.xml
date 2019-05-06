@@ -19,6 +19,12 @@
     <string name="asociar_repartidor">Repartidor:</string>
     <string name="finalizar">Finalizar</string>
 
+    <!-- activity_info_pedido_repartidor -->
+
+    <string name="finalizarRuta">Finalizar ruta</string>
+    <string name="iniciarRuta">Iniciar ruta</string>
+    <string name="cancelarRuta">Cancelar ruta</string>
+
     <!-- activity_config_punto_reparto_admin -->
     <string name="punto_reparto">Seleccione un punto de reparto</string>
 
@@ -36,5 +42,7 @@
     <string name="title_activity_pedido_item">Detalle pedido</string>
     <string name="title_activity_info_pedido">Información pedido</string>
     <string name="title_activity_consultar_estado_pedido">ConsultarEstadoPedido</string>
+    <string name="title_activity_listar_pedidos">Lista de pedidos</string>
+
 
 </resources>

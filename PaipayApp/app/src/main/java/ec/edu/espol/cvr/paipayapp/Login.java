@@ -1,11 +1,13 @@
 package ec.edu.espol.cvr.paipayapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -25,13 +27,17 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ec.edu.espol.cvr.paipayapp.model.User;
+
+
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
 public class Login extends Activity {
+
     private int port = 5000;
-    private String ip = "192.168.0.9";
-    private boolean test_mode = true;  //sacar test
+    private String ip = "192.168.0.8"; //.8 maria belen
+    private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
 
     @Override
@@ -62,6 +68,8 @@ public class Login extends Activity {
             return;
         }
         if (!email.isEmpty() && !password.isEmpty()) {
+            email = "beleng.c@hotmail.com";
+            password = "adminadmin";
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("email", email.toLowerCase());
             editor.apply();
@@ -72,6 +80,7 @@ public class Login extends Activity {
                 get_menu(rol);
             }else{
                 api_login(email, password);
+
             }
         } else {
             Toast.makeText(this, Invariante.ERROR_LOGIN_1, Toast.LENGTH_SHORT).show();
@@ -88,7 +97,7 @@ public class Login extends Activity {
         if (rol == Invariante.USUARIO_ADMIN){
             intent = new Intent(Login.this, MenuAdmin.class);
         }else if (rol == Invariante.USUARIO_REPARTIDOR){
-            intent = new Intent(Login.this, MenuAdmin.class); // cambiar de activity
+            intent = new Intent(Login.this, ListarPedidosRepartidor.class); // cambiar de activity
         }else{
             Toast.makeText(this, Invariante.ERROR_LOGIN_ROL, Toast.LENGTH_SHORT).show();
             return;
@@ -102,17 +111,22 @@ public class Login extends Activity {
         try {
             parameters.put("email", email);
             parameters.put("password", password);
+            System.out.println(email);
+            System.out.println(password);
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-            String server = Invariante.get_server(ip, port);
+            final String server = Invariante.get_server(ip, port);
+            System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            System.out.println(server+"/api/v1/auth/login/");
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.POST,server+ "/api/v1/auth/login/" , parameters, new Response.Listener<JSONObject>() {
 
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
+
                                 System.out.println(response.toString());
-                                //String rol = response.getString("rol");
-                                String rol = Invariante.USUARIO_ADMIN;
+                                String rol = response.getString("role");
+                                //String rol = Invariante.USUARIO_ADMIN;
                                 String token = response.getString(Invariante.TOKEN);
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.putString(Invariante.TOKEN, token);
@@ -193,4 +207,6 @@ public class Login extends Activity {
                 return true;
         }
     }
+
+
 }

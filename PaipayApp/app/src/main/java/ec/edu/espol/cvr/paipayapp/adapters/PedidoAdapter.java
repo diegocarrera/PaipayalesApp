@@ -20,6 +20,12 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         super(context,0, pedidos);
         this.context = context;
         this.pedidos = pedidos;
+        for (Pedido p:pedidos
+             ) {
+            System.out.println("DENTRO DEL ADAPTERRRRRRRRRRRRRRRRRRR");
+            System.out.println(p.getCodigo());
+
+        }
     }
 
     static class ViewHolder{
