@@ -104,7 +104,8 @@ public class ListarPedidosRepartidor extends Activity {
             Hace un requerimiento al servidor usando Pedido.get_pedidos_por_repartidor()
              para traerse la lista de pedidos relacionados a un repartidor
         */
-        final String user_token = sharedpreferences.getString("token","token1");
+        final String user_token = sharedpreferences.getString(Invariante.TOKEN,"");
+
         try {
             if(port != 0 && ip != ""){
 
@@ -118,6 +119,7 @@ public class ListarPedidosRepartidor extends Activity {
 
                             @Override
                             public void onResponse(JSONObject response) {
+
                                 try {
                                     JSONArray pedidos_response = response.getJSONArray("data");
 

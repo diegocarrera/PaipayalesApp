@@ -52,6 +52,8 @@ public class InfoPedido extends Activity {
     private File foto_pedido = null;
     private File dir;
     TextView view_cliente, view_direccion, view_fecha, view_barras;
+    int route_id;
+    boolean route_created;
 
 
     @Override
@@ -63,7 +65,7 @@ public class InfoPedido extends Activity {
         view_cliente = (TextView) findViewById(R.id.cliente_tv);
         view_direccion = (TextView) findViewById(R.id.direccion_tv);
         view_barras = (TextView) findViewById(R.id.cod_barras_tv);
-
+        route_created = false;
 
 
         finalizar  = (Button) findViewById(R.id.finalizarRuta);
@@ -184,7 +186,14 @@ public class InfoPedido extends Activity {
             this.cancelar.setEnabled(true);
             this.cancelar.setBackgroundColor(getResources().getColor(R.color.color_botones));
 
-            //hacer los requerimientos POST
+            //Crear una ruta
+            crearRuta();
+
+            //enviar coordenadas al servidor cada 15 seg
+            if(route_created){
+                System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            }
+
         }
     }
 
@@ -283,11 +292,106 @@ public class InfoPedido extends Activity {
             }else{
                 Toast.makeText(this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
             }
-            //pedidoadapter.notifyDataSetChanged();
+
         }catch (Exception e) {
             e.printStackTrace();
         }
 
+
+    }
+
+    void crearRuta(){
+
+        /*
+        Funcion que crea una ruta, mandando un requerimiento POST al servidor.
+        Headers:
+            Authorization: token
+        Parametros:
+            {"purchase":1}
+        Respuesta:
+            {"id": 1}
+        */
+        final SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+        String ip = sharedpreferences.getString("ip","");
+        int port = sharedpreferences.getInt("port",0);
+
+        try {
+
+            if(port != 0 && ip != ""){
+
+                //Armo el request
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                String server = Invariante.get_server(ip, port);
+                String new_path = server + "/tracks/api/v1/routes";
+                //agregar los parametros necesarios
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put("purchase", Integer.toString(pedido.getCodigo()));
+
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.POST, new_path, jsonBody, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+
+                                    route_id = Integer.parseInt(response.getString("id"));
+                                    route_created = true;
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                try {
+                                    int code = error.networkResponse.statusCode;
+                                    JSONObject json = new JSONObject(new String(error.networkResponse.data));
+                                    String message = "Error " + String.valueOf(code) + json.getString("message");
+                                    Toast.makeText(InfoPedido.this, message, Toast.LENGTH_SHORT).show();
+                                }catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                {
+
+                    /**
+                     * Passing some request headers
+                    */
+                     @Override
+                     public Map<String, String> getHeaders() throws AuthFailureError {
+                     HashMap<String, String> headers = new HashMap<String, String>();
+                     //headers.put("Content-Type", "application/json");
+                     headers.put("Authorization", sharedpreferences.getString(Invariante.TOKEN,""));
+                     return headers;
+                     }
+
+                    /**
+                     * Passing some parameters
+                     */
+
+                    /*
+                    protected Map<String, String> getParams()
+                    {
+                        Map<String, String>  params = new HashMap<String, String>();
+                        params.put("purchase", Integer.toString(pedido.getCodigo()));
+
+                        return params;
+                    }*/
+                };
+                requestQueue.add(jsonObjectRequest);
+
+            }else{
+                Toast.makeText(this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
