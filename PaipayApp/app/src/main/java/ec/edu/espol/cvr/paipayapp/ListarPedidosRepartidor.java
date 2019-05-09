@@ -67,9 +67,9 @@ public class ListarPedidosRepartidor extends Activity {
                 pedidos.clear();
                 pedidoadapter.notifyDataSetChanged();
                 intent.putExtra("id_pedido", tmp_pedido.getCodigo());
-                DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
-                intent.putExtra("fecha", dateFormat.format(tmp_pedido.getFecha()));
-                //intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
+                //DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
+                //intent.putExtra("fecha", dateFormat.format(tmp_pedido.getFecha()));
+                intent.putExtra("direccion",tmp_pedido.getDireccion());
                 startActivity(intent);
                 finish();
             }
@@ -124,10 +124,12 @@ public class ListarPedidosRepartidor extends Activity {
                                     for (int i = 0; i < pedidos_response.length(); i++) {
 
                                         JSONObject pedido = pedidos_response.getJSONObject(i);
+                                        /*
                                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
                                         Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
                                         System.out.println(fecha);
-                                        pedidos.add(new Pedido(fecha, pedido.getInt("id")));
+                                        */
+                                        pedidos.add(new Pedido(pedido.getInt("id"),pedido.getString("user__address")));
                                     }
                                     pedidoadapter = new PedidoAdapter(ListarPedidosRepartidor.this, pedidos);
                                     listview_pedido.setAdapter(pedidoadapter);
@@ -135,8 +137,6 @@ public class ListarPedidosRepartidor extends Activity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(ListarPedidosRepartidor.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
                                 }
                             }
                         }, new Response.ErrorListener() {

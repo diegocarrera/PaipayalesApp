@@ -12,11 +12,13 @@
     <string name="selecciona_pedido">Selecciona un pedido:</string>
 
     <!-- activity_info_pedido -->
-    <string name="codigo_pedido">Código pedido : </string>
+    <string name="codigo_pedido">ID pedido : </string>
     <string name="fecha_pedido">Fecha pedido : </string>
     <string name="asociar_tag">Asociar etiqueta</string>
     <string name="asociar_foto">Asociar foto</string>
     <string name="asociar_repartidor">Repartidor:</string>
+    <string name="codigo_barras">Código de barras: </string>
+
     <string name="finalizar">Finalizar</string>
 
     <!-- activity_info_pedido_repartidor -->

@@ -36,7 +36,7 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 public class Login extends Activity {
 
     private int port = 5000;
-    private String ip = "172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
+    private String ip = "192.168.0.8";//"172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
     private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
 

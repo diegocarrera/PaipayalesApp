@@ -43,6 +43,16 @@
         android:id="@+id/direccion_tv"
         android:layout_margin="5dp"/>
 
+    <TextView
+        android:text="@string/codigo_barras"
+        android:typeface="monospace"
+        android:textColor="@color/texto_sin_opac"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cod_barras_tv"
+        android:layout_margin="5dp"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

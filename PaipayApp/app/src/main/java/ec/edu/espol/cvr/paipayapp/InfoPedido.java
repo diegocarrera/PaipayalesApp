@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class InfoPedido extends Activity {
     private Button finalizar, cancelar, iniciar;
     private File foto_pedido = null;
     private File dir;
-    TextView view_cliente, view_direccion;
+    TextView view_cliente, view_direccion, view_fecha, view_barras;
 
 
     @Override
@@ -58,9 +59,11 @@ public class InfoPedido extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_pedido_repartidor);
         TextView viewid_pedido = (TextView) findViewById(R.id.editcodigo);
-        TextView view_fecha = (TextView) findViewById(R.id.fechaPedido_tv);
+        view_fecha = (TextView) findViewById(R.id.fechaPedido_tv);
         view_cliente = (TextView) findViewById(R.id.cliente_tv);
         view_direccion = (TextView) findViewById(R.id.direccion_tv);
+        view_barras = (TextView) findViewById(R.id.cod_barras_tv);
+
 
 
         finalizar  = (Button) findViewById(R.id.finalizarRuta);
@@ -74,17 +77,15 @@ public class InfoPedido extends Activity {
         Intent intent = getIntent();
         if(intent.getIntExtra("id_pedido",0) != 0){
             int codigo = intent.getIntExtra("id_pedido",0);
-            try {
-                Date fecha = new SimpleDateFormat(Invariante.format_date).parse(intent.getStringExtra("fecha"));
-                pedido = new Pedido(fecha, codigo);
+
+                String direccion = intent.getStringExtra("direccion");
+                pedido = new Pedido(codigo,direccion);
                 viewid_pedido.setText( viewid_pedido.getText() + String.valueOf(pedido.getCodigo()));
-                view_fecha.setText(view_fecha.getText() + pedido.getFecha().toString());
+                view_direccion.setText(view_direccion.getText() + pedido.getDireccion());
                // Obtengo del servidor el nombre del cliente y otros datos del pedido...
                 obtener_info_pedido(codigo);
 
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+
         }
     }
 
@@ -197,6 +198,7 @@ public class InfoPedido extends Activity {
             "products": "{}",
             "barCode": "{}",
             "totalPrice": 0,
+            "dateCreated": "2019-04-29T18:28:00Z",
             "user": {
                 "name": "Belen GC",
                 "phoneNumber": "+5939688888888",
@@ -218,28 +220,34 @@ public class InfoPedido extends Activity {
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 String server = Invariante.get_server(ip, port);
                 String new_path = server + "/api/v1/purchases/info/"+id;
-                System.out.println("DENTRO DE OBTENER_INFO_PEDIDOOOOOO "+ new_path);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.GET, new_path, null, new Response.Listener<JSONObject>() {
 
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
+
                                     JSONObject user_dict = response.getJSONObject("user");
                                     String client_name = user_dict.getString("name");
-                                    String direccion = user_dict.getString("address");
+                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                                    Date fecha = formatter.parse(response.getString("dateCreated").replaceAll("Z$", "+0000"));
+                                    DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
+                                    String fecha_str = dateFormat.format(fecha);
                                     String codigo_barra = response.getString("barCode");
                                     pedido.setUser(client_name);
-                                    pedido.setDireccion(direccion);
+                                    pedido.setFecha(fecha);
                                     pedido.setCodigo_barra(codigo_barra);
 
                                     view_cliente.setText(view_cliente.getText()+client_name);
-                                    view_direccion.setText(view_direccion.getText()+direccion);
+                                    view_fecha.setText(view_fecha.getText()+fecha_str);
+                                    view_barras.setText(view_barras.getText()+codigo_barra);
 
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         }, new Response.ErrorListener() {

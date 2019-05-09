@@ -31,6 +31,11 @@ public class Pedido {
         this.codigo = codigo;
         this.codigo_barra = "";
     }
+    public Pedido(int codigo, String direccion) {
+        this.codigo = codigo;
+        this.codigo_barra = "";
+        this.direccion=direccion;
+    }
 
     public Pedido(Date fecha, int codigo, ArrayList<DetallePedido> detallePedidos) {
         this.fecha = fecha;

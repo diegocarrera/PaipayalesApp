@@ -22,9 +22,6 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         this.pedidos = pedidos;
         for (Pedido p:pedidos
              ) {
-            System.out.println("DENTRO DEL ADAPTERRRRRRRRRRRRRRRRRRR");
-            System.out.println(p.getCodigo());
-
         }
     }
 
@@ -45,7 +42,7 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         ViewHolder holder = (ViewHolder) convertView.getTag();
         Pedido currentPedido = this.pedidos.get(position);
         holder.codigo.setText("Pedido #" + String.valueOf(currentPedido.getCodigo()));
-        holder.fecha.setText("Fecha : " + currentPedido.getFecha().toString());
+        holder.fecha.setText("Dirección : " + currentPedido.getDireccion().toString());
         return convertView;
     }
 }
