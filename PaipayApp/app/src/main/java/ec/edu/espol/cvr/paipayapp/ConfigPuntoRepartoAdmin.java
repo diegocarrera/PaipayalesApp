@@ -57,7 +57,7 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), "Punto de reparto seleccionado: " + item, Toast.LENGTH_LONG).show();
+        Toast.makeText(parent.getContext(), "Punto de reparto seleccionado: " + item, Toast.LENGTH_SHORT).show();
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(Invariante.PUNTO_REPARTO, item);
         editor.apply();
@@ -114,7 +114,7 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
                     });
             requestQueue.add(jsonObjectRequest);
         }else{
-            Toast.makeText(this, Invariante.CONF_ERROR_1, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Invariante.CONF_ERROR_1, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -122,5 +122,12 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
         super.onBackPressed();
         startActivity(new Intent(this, MenuAdmin.class));
         finish();
+    }
+
+    public void guardar(View view){
+        Intent intent = new Intent(this, MenuAdmin.class);
+        startActivity(intent);
+        finish();
+
     }
 }
