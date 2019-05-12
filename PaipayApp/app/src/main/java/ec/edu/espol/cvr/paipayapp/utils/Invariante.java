@@ -38,7 +38,22 @@ public class Invariante {
     public static final String PUNTO_REPARTO = "punto_reparto";
     public static final String ERROR_PUNTO_REPARTO = "No tiene configurado un punto de reparto. Debe configurar uno. ";
 
-
+    public static String get_estado_str(int id){
+        switch (id){
+            case 0:
+                return "SOLICITADO";
+            case 1:
+                return "ARMADO";
+            case 2:
+                return "POR ENTREGAR";
+            case 3:
+                return "ENTREGADO";
+            case -1:
+                return "CANCELADO";
+            default:
+                return "Estado Desconocido";
+        }
+    }
 
     public static String get_server(String ip, int port){
         return "http://" + ip + ":" + port;

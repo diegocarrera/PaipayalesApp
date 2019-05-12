@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -34,12 +35,15 @@ public class ArmarPedidos extends Activity {
     private ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
     private PedidoAdapter pedidoadapter;
     private  SharedPreferences sharedpreferences;
+    private SwipeRefreshLayout refresh;
     private ListView listview_pedido;
+    private boolean test_mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_armar_pedidos);
+        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh);
 
         listview_pedido = (ListView) findViewById(R.id.listapedidos);
         listview_pedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -50,26 +54,38 @@ public class ArmarPedidos extends Activity {
             Pedido tmp_pedido = pedidos.get(position);
             pedidos.clear();
             pedidoadapter.notifyDataSetChanged();
+            intent.putExtra("direccion",tmp_pedido.getDireccion());
             intent.putExtra("id_pedido", tmp_pedido.getCodigo());
-            DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
-            intent.putExtra("fecha",dateFormat.format(tmp_pedido.getFecha()));
             intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
             startActivity(intent);
             finish();
             }
         });
         sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
-        boolean test_mode = sharedpreferences.getBoolean("test_mode",true);
+        test_mode = sharedpreferences.getBoolean("test_mode",true);
+        fill();
 
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(getApplicationContext(),"Actualizando", Toast.LENGTH_SHORT).show();
+                pedidos.clear();
+                fill();
+                refresh.setRefreshing(false);
+                Toast.makeText(getApplicationContext(),"Actualizado", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fill(){
         if (test_mode){
             for (int i = 0; i < 3; i++) {
                 try {
                     Date fecha = new SimpleDateFormat(Invariante.format_date).parse(i+"/03/2019");
-                    pedidos.add(new Pedido(fecha, i+1));
+                    pedidos.add(new Pedido(i+1,"Norte" ));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
             }
             pedidoadapter = new PedidoAdapter(this, pedidos);
             pedidoadapter.notifyDataSetChanged();
@@ -93,7 +109,7 @@ public class ArmarPedidos extends Activity {
             String punto_reparto = sharedpreferences.getString(Invariante.PUNTO_REPARTO,"");
             if(port != 0 && ip != ""){
                 if (punto_reparto == ""){
-                    Toast.makeText(this, Invariante.ERROR_PUNTO_REPARTO, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, Invariante.ERROR_PUNTO_REPARTO, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ArmarPedidos.this, ConfigPuntoRepartoAdmin.class);
                     startActivity(intent);
                     finish();
@@ -113,7 +129,8 @@ public class ArmarPedidos extends Activity {
                                         //Date fecha = new SimpleDateFormat(Invariante.FORMAT_API_FECHA).parse(filter);
                                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
                                         Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
-                                        pedidos.add(new Pedido(fecha, pedido.getInt("id")));
+                                        pedidos.add(new Pedido(pedido.getInt("id"),pedido.getString("user__address")));
+
                                     }
                                     pedidoadapter = new PedidoAdapter(ArmarPedidos.this, pedidos);
                                     listview_pedido.setAdapter(pedidoadapter);
