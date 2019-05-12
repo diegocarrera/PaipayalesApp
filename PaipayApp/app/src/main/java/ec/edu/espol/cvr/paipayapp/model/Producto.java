@@ -1,9 +1,17 @@
 package ec.edu.espol.cvr.paipayapp.model;
 
 public class Producto {
+    private int id;
     private String name;
     private String category;
     private String unit;
+
+    public Producto(int id) {
+        this.id = id;
+        this.name = "";
+        this.category = "";
+        this.unit = "";
+    }
 
     public Producto(String name, String category) {
         this.name = name;

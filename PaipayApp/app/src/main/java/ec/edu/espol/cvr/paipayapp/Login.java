@@ -37,7 +37,7 @@ public class Login extends Activity {
 
     private int port = 5000;
     private String ip = "192.168.0.8";//"172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
-    private boolean test_mode = false;  //sacar test
+    private boolean test_mode = true;  //sacar test
     private SharedPreferences sharedpreferences;
 
     @Override
@@ -76,7 +76,7 @@ public class Login extends Activity {
 
             if (test_mode){
                 Toast.makeText(this, Invariante.PRUEBA, Toast.LENGTH_SHORT).show();
-                String rol = Invariante.USUARIO_REPARTIDOR;
+                String rol = Invariante.USUARIO_ADMIN;
                 get_menu(rol);
             }else{
                 api_login(email, password);

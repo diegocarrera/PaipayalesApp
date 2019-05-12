@@ -60,9 +60,9 @@
         android:orientation="vertical" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/iniciarRuta"
@@ -81,20 +81,20 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@color/color_botones"
+            android:enabled="false"
             android:onClick="asociarTag"
-            android:text="@string/finalizarRuta"
-            android:enabled="false"/>
+            android:text="@string/finalizarRuta" />
 
         <Button
             android:id="@+id/cancelarRuta"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:onClick="AsociarTag"
-            android:background="@color/color_botones"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="@string/cancelarRuta"
-            android:enabled="false"/>
+            android:layout_weight="1"
+            android:background="@color/color_botones"
+            android:enabled="false"
+            android:onClick="AsociarTag"
+            android:text="@string/cancelarRuta" />
 
     </LinearLayout>
 

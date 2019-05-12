@@ -17,14 +17,25 @@
         android:layout_margin="5dp"/>
 
     <TextView
+        android:id="@+id/editCodigoBarra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/codigobarra_pedido"
+        android:textColor="@color/texto_sin_opac"
+        android:layout_below="@id/editcodigo"
+        android:textSize="16sp"
+        android:layout_margin="5dp"/>
+
+    <TextView
         android:id="@+id/editfecha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="@string/fecha_pedido"
+        android:text="@string/direccion_pedido"
         android:textColor="@color/texto_sin_opac"
         android:textSize="16sp"
-        android:layout_below="@id/editcodigo"
+        android:layout_below="@id/editCodigoBarra"
         android:inputType="date"
         android:layout_margin="5dp"/>
 
