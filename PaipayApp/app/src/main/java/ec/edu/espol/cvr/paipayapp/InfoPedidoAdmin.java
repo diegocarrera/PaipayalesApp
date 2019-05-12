@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,8 +57,9 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     private File dir;
 
     private Spinner spinner;
+    ListView listview_detalle_pedido;
     private DetallePedidoAdapter detalles_pedidoadapter;
-    TextView viewid_pedido;
+    TextView viewid_pedido, viewCodigoBarra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,49 +72,48 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         test_mode = sharedpreferences.getBoolean("test_mode", true);
 
         viewid_pedido = (TextView) findViewById(R.id.editcodigo);
+        viewCodigoBarra = (TextView) findViewById(R.id.editCodigoBarra);
         TextView view_fecha = (TextView) findViewById(R.id.editfecha);
         spinner = (Spinner) findViewById(R.id.spinnerRepartidor);
         spinner.setOnItemSelectedListener(this);
+        listview_detalle_pedido = (ListView) findViewById(R.id.listadetallepedidos);
 
         Intent intent = getIntent();
         if(intent.getIntExtra("id_pedido",0) != 0){
             int codigo = intent.getIntExtra("id_pedido",0);
-            try {
-                Date fecha = new SimpleDateFormat(Invariante.format_date).parse(intent.getStringExtra("fecha"));
-                pedido = new Pedido(fecha, codigo);
-                viewid_pedido.setText( viewid_pedido.getText() + String.valueOf(pedido.getCodigo()));
-                view_fecha.setText(view_fecha.getText() + pedido.getFecha().toString());
-                ListView listview_detalle_pedido = (ListView) findViewById(R.id.listadetallepedidos);
+            //Date fecha = new SimpleDateFormat(Invariante.format_date).parse(intent.getStringExtra("fecha"));
+            String direccion = intent.getStringExtra("direccion");
+            pedido = new Pedido(codigo,direccion);
+            viewid_pedido.setText( viewid_pedido.getText() + String.valueOf(pedido.getCodigo()));
+            view_fecha.setText("Dirección:" + pedido.getDireccion());
 
-                detalles_pedidoadapter = new DetallePedidoAdapter(this, detalles_pedido);
-                listview_detalle_pedido.setAdapter(detalles_pedidoadapter);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
         }
 
         if(test_mode){
             Toast.makeText(this, Invariante.PRUEBA, Toast.LENGTH_SHORT).show();
             repartidores.add("Repartidor 1");
             repartidores.add("Repartidor 2");
-            set_option();
             for (int i = 0; i < 5; i++) {
                 Producto producto = new Producto("papa", "verdura", "libra");
                 detalles_pedido.add(new DetallePedido(producto, i + 1));
+                repartidores.add("Repartidor #" + String.valueOf(i));
             }
-            detalles_pedidoadapter.notifyDataSetChanged();
+            set_option();
         }else{
             update_list();
             update_repartidor();
         }
+        detalles_pedidoadapter = new DetallePedidoAdapter(this, detalles_pedido);
+        listview_detalle_pedido.setAdapter(detalles_pedidoadapter);
+        detalles_pedidoadapter.notifyDataSetChanged();
     }
 
     /*----------------------------- spinner----------------------------------------*/
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), "Repartidor seleccionado: " + item, Toast.LENGTH_LONG).show();
-        pedido.setRepartidor(item);
+        Toast.makeText(parent.getContext(), "Repartidor seleccionado: " + item, Toast.LENGTH_SHORT).show();
+        //pedido.setRepartidor(item);
     }
 
     public void onNothingSelected(AdapterView<?> arg0) {
@@ -221,7 +222,8 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                         if(result.getContents() != null) {
                             String codigo_barra = result.getContents();
                             pedido.setCodigo_barra(codigo_barra);
-                            viewid_pedido.setText( viewid_pedido.getText() + " code:"+ codigo_barra);
+                            viewCodigoBarra.setText("Código de barra :" + " code:"+ codigo_barra);
+
                             Toast.makeText(InfoPedidoAdmin.this, Invariante.CODIGO_OK, Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -254,12 +256,14 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         startActivity(intent);
         finish();
     }
-//URL: /purchases/info/aquivaelcodigo
+
     public void update_api(){
         JSONObject parameters = new JSONObject();
         try {
+            pedido.setRepartidor(spinner.getSelectedItem().toString());
+            parameters.put("id", pedido.getCodigo());
             parameters.put("codigo_barra", pedido.getCodigo_barra());
-            parameters.put("codigo_pedido", pedido.getCodigo());
+
             parameters.put("estado", "ARMADO");
             parameters.put("repartidor", pedido.getRepartidor());
             //FALTA ENVIAR FOTO
@@ -303,27 +307,52 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     }
 
     void update_list(){
-        //ACTUALIZAR --------------- API RETORNA JSON O ARREGLO?
-        /*
-        try {
-            JSONObject pedidos_json = new JSONObject();
-            if (pedidos_json.getInt("response_code") == 200) {
-                JSONArray jsonarr = pedidos_json.getJSONArray("detalles");
-                for (int i = 0; i < jsonarr.length(); i++) {
-                    JSONObject detalle_pedido = jsonarr.getJSONObject(i);
-                    Producto producto = new Producto(detalle_pedido.getString("nombre"), detalle_pedido.getString("categoria"), detalle_pedido.getString("unidad"));
-                    detalles_pedido.add(new DetallePedido(producto, detalle_pedido.getInt("cantidad")));
-                }
-            } else {
-                Toast.makeText(this, pedidos_json.getString("error"), Toast.LENGTH_LONG).show();
-            }
-            detalles_pedidoadapter.notifyDataSetChanged();
-            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),Invariante.path_fotos_pedidos);
-            dir.mkdirs();
-            foto_pedido = new File(dir,"pedido_" + pedido.getCodigo() + ".jpeg");
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        if(test_mode){
+
+        }else{
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            String server = Invariante.get_server(ip, port);
+            String url = server + "/api/v1/purchases/info/" + String.valueOf(pedido.getCodigo());
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray jsonarr = null;
+                                jsonarr = response.getJSONArray("products");
+                                for (int i = 0; i < jsonarr.length(); i++) {
+                                    JSONObject detalle_producto = jsonarr.getJSONObject(i);
+                                    Producto producto = new Producto(detalle_producto.getInt("id"));
+                                    detalles_pedido.add(new DetallePedido(producto, detalle_producto.getInt("cantidad")));
+                                }
+                                detalles_pedidoadapter.notifyDataSetChanged();
+                                dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),Invariante.path_fotos_pedidos);
+                                dir.mkdirs();
+                                foto_pedido = new File(dir,"pedido_" + pedido.getCodigo() + ".jpeg");
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                                Toast.makeText(InfoPedidoAdmin.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            try {
+                                int code = error.networkResponse.statusCode;
+                                JSONObject json = new JSONObject(new String(error.networkResponse.data));
+                                String message = "Error " + String.valueOf(code) + json.getString("message");
+                                Toast.makeText(InfoPedidoAdmin.this, message, Toast.LENGTH_SHORT).show();
+                            }catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(InfoPedidoAdmin.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            requestQueue.add(jsonObjectRequest);
+        }
+
     }
 
 }

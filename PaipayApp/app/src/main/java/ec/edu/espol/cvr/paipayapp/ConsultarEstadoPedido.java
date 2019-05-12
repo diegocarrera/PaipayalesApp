@@ -3,7 +3,9 @@ package ec.edu.espol.cvr.paipayapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,6 +20,8 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
@@ -44,7 +48,7 @@ public class ConsultarEstadoPedido extends Activity {
         if(test_mode){
             Toast.makeText(this, Invariante.PRUEBA, Toast.LENGTH_SHORT).show();
             infoPedido.setText("Pedido #1");
-            estadoPedido.setText("Estado : SOLICITADO");
+            estadoPedido.setText("Estado : " + Invariante.get_estado_str(0));
             repartidorPedido.setText("Repartidor: USER 1");
         }else{
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -59,7 +63,7 @@ public class ConsultarEstadoPedido extends Activity {
                                 System.out.println(response.toString());
                                 Toast.makeText(ConsultarEstadoPedido.this, R.string.pedidoEncontrado, Toast.LENGTH_SHORT).show();
                                 infoPedido.setText("Pedido #" +  String.valueOf(response.getInt("id")));
-                                estadoPedido.setText("Estado : " + String.valueOf(response.getInt("status"))); //cambiar por string
+                                estadoPedido.setText("Estado : " + Invariante.get_estado_str(response.getInt("status"))); //cambiar por string
                                 //repartidorPedido.setText(R.string.RepartidorPedido + pedidoConsultado.getRepartidor());
                             } catch (JSONException e) {
                                 e.printStackTrace();

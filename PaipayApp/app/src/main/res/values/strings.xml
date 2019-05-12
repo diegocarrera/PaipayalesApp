@@ -14,6 +14,8 @@
     <!-- activity_info_pedido -->
     <string name="codigo_pedido">ID pedido : </string>
     <string name="fecha_pedido">Fecha pedido : </string>
+    <string name="direccion_pedido">Direccion: </string>
+    <string name="codigobarra_pedido">Código de barra : </string>
     <string name="asociar_tag">Asociar etiqueta</string>
     <string name="asociar_foto">Asociar foto</string>
     <string name="asociar_repartidor">Repartidor:</string>
