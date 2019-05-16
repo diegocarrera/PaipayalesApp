@@ -6,6 +6,8 @@ public class Invariante {
     public static final String FORMAT_API_FECHA = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
     public static final String PRUEBA = "Modo prueba activado.";
     public static final String TOKEN = "access-token";
+    public static final String ROUTE = "route_id";
+
 
     /*Login.java*/
     public static final String ERROR_CORREO = "Correo no válido.";

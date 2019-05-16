@@ -25,9 +25,9 @@
 
     <!-- activity_info_pedido_repartidor -->
 
-    <string name="finalizarRuta">Finalizar ruta</string>
-    <string name="iniciarRuta">Iniciar ruta</string>
-    <string name="cancelarRuta">Cancelar ruta</string>
+    <string name="finalizarRuta">Finalizar entrega</string>
+    <string name="iniciarRuta">Iniciar entrega</string>
+    <string name="cancelarRuta">Cancelar entrega</string>
 
     <!-- activity_config_punto_reparto_admin -->
     <string name="punto_reparto">Seleccione un punto de reparto</string>

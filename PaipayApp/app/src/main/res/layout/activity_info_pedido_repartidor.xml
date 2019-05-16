@@ -82,7 +82,7 @@
             android:layout_weight="1"
             android:background="@color/color_botones"
             android:enabled="false"
-            android:onClick="asociarTag"
+            android:onClick="finalizarRuta"
             android:text="@string/finalizarRuta" />
 
         <Button
