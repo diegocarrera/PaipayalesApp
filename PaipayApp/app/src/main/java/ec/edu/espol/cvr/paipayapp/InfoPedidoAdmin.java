@@ -81,12 +81,10 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         Intent intent = getIntent();
         if(intent.getIntExtra("id_pedido",0) != 0){
             int codigo = intent.getIntExtra("id_pedido",0);
-            //Date fecha = new SimpleDateFormat(Invariante.format_date).parse(intent.getStringExtra("fecha"));
             String direccion = intent.getStringExtra("direccion");
             pedido = new Pedido(codigo,direccion);
             viewid_pedido.setText( viewid_pedido.getText() + String.valueOf(pedido.getCodigo()));
             view_fecha.setText("Dirección:" + pedido.getDireccion());
-
         }
 
         if(test_mode){
@@ -261,16 +259,21 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         JSONObject parameters = new JSONObject();
         try {
             pedido.setRepartidor(spinner.getSelectedItem().toString());
+            String[] data_repartidor  = pedido.getRepartidor().split("-");
+            if (data_repartidor.length > 0){
+                parameters.put("user", data_repartidor[0]);
+            }else{
+                Toast.makeText(this, "No tiene asociado un repartidor", Toast.LENGTH_LONG).show();
+                return ;
+            }
             parameters.put("id", pedido.getCodigo());
-            parameters.put("codigo_barra", pedido.getCodigo_barra());
-
-            parameters.put("estado", "ARMADO");
-            parameters.put("repartidor", pedido.getRepartidor());
+            parameters.put("barCode", pedido.getCodigo_barra());
+            parameters.put("estado", Invariante.ESTADO_ARMADO);
             //FALTA ENVIAR FOTO
 
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             String server = Invariante.get_server(ip, port);
-            String url = server + "/api/v1/pedidos/" + String.valueOf(pedido.getCodigo());
+            String url = server + "api/v1/purchases/process-purchase/";
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.PUT, url, parameters, new Response.Listener<JSONObject>() {
 
@@ -319,8 +322,8 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                JSONArray jsonarr = null;
-                                jsonarr = response.getJSONArray("products");
+                                String jsonstr = response.getString("products");
+                                JSONArray jsonarr = new JSONArray(jsonstr);
                                 for (int i = 0; i < jsonarr.length(); i++) {
                                     JSONObject detalle_producto = jsonarr.getJSONObject(i);
                                     Producto producto = new Producto(detalle_producto.getInt("id"));
