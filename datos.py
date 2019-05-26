@@ -2,6 +2,7 @@ import os
 import sys
 import django
 import datetime
+import json
 from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'inventoryms.settings')
@@ -142,18 +143,23 @@ centro_3 = DeliveryCenter.objects.create(name="Secundario, Sur", latitudeGeo=4.1
 
 ####### pedidos ########################
 products_list_1 = []
-products_list_1.append({"id":product_1.id, "cantidad": 2})
-products_list_1.append({"id":product_2.id, "cantidad": 3})
+print(product_2.id)
+products_list_1.append({"id":product_1.id.urn[9:], "cantidad": 2})
+products_list_1.append({"id":product_2.id.urn[9:], "cantidad": 3})
+products_list_1= json.dumps(products_list_1)
+print(product_2.id)
 
 products_list_2 = []
-products_list_2.append({"id":product_3.id, "cantidad": 4})
-products_list_2.append({"id":product_4.id, "cantidad": 5})
-products_list_2.append({"id":product_5.id, "cantidad": 3})
-products_list_2.append({"id":product_5.id, "cantidad": 6})
+products_list_2.append({"id":product_3.id.urn[9:], "cantidad": 4})
+products_list_2.append({"id":product_4.id.urn[9:], "cantidad": 5})
+products_list_2.append({"id":product_5.id.urn[9:], "cantidad": 3})
+products_list_2.append({"id":product_5.id.urn[9:], "cantidad": 6})
+products_list_2= json.dumps(products_list_2)
 
 products_list_3 = []
-products_list_3.append({"id":product_6.id, "cantidad": 3})
-products_list_3.append({"id":product_7.id, "cantidad": 4})
+products_list_3.append({"id":product_6.id.urn[9:], "cantidad": 3})
+products_list_3.append({"id":product_7.id.urn[9:], "cantidad": 4})
+products_list_3= json.dumps(products_list_3)
 ########### estado solIcitado
 SOLICITADO = 0
 purchase_1 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO)
