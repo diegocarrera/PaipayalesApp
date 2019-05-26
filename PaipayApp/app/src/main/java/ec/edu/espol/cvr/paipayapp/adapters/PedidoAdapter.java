@@ -20,9 +20,6 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         super(context,0, pedidos);
         this.context = context;
         this.pedidos = pedidos;
-        for (Pedido p:pedidos
-             ) {
-        }
     }
 
     static class ViewHolder{
@@ -42,7 +39,7 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         ViewHolder holder = (ViewHolder) convertView.getTag();
         Pedido currentPedido = this.pedidos.get(position);
         holder.codigo.setText("Pedido #" + String.valueOf(currentPedido.getCodigo()));
-        holder.fecha.setText("Dirección : " + currentPedido.getDireccion().toString());
+        holder.fecha.setText("Fecha : " + currentPedido.getFecha());
         return convertView;
     }
 }

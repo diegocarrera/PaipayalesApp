@@ -78,12 +78,7 @@ public class ListarPedidosRepartidor extends Activity {
         boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
         if (test_mode) {
             for (int i = 0; i < 3; i++) {
-                try {
-                    Date fecha = new SimpleDateFormat(Invariante.format_date).parse(i + "/03/2019");
-                    pedidos.add(new Pedido(fecha, i + 1));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                pedidos.add(new Pedido("23/23/2019", i + 1));
             }
             pedidoadapter = new PedidoAdapter(this, pedidos);
             pedidoadapter.notifyDataSetChanged();

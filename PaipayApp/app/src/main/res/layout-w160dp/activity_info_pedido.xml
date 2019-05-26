@@ -47,13 +47,13 @@
             android:id="@+id/asignarCodigo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginHorizontal="25dp"
             android:layout_weight="1"
             android:background="@color/color_botones"
             android:onClick="AsociarTag"
             android:text="@string/asociar_tag" />
 
-        <Button
+        <!--Button
             android:id="@+id/asociarFoto"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             android:onClick="tomarFoto"
             android:layout_margin="5dp"
             android:background="@color/color_botones"
-            android:text="@string/asociar_foto" />
+            android:text="@string/asociar_foto" /-->
 
     </LinearLayout>
 
@@ -109,9 +109,10 @@
             android:id="@+id/finalizar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
             android:onClick="finalizar"
             android:background="@color/color_botones"
+            android:layout_marginHorizontal="25dp"
             android:text="@string/finalizar" />
 
     </LinearLayout>

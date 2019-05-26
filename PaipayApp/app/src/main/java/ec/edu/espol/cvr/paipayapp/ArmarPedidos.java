@@ -54,9 +54,8 @@ public class ArmarPedidos extends Activity {
             Pedido tmp_pedido = pedidos.get(position);
             pedidos.clear();
             pedidoadapter.notifyDataSetChanged();
-            intent.putExtra("direccion",tmp_pedido.getDireccion());
+            intent.putExtra("fecha",tmp_pedido.getFecha());
             intent.putExtra("id_pedido", tmp_pedido.getCodigo());
-            intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
             startActivity(intent);
             finish();
             }
@@ -125,9 +124,7 @@ public class ArmarPedidos extends Activity {
                                 try {
                                     for (int i = 0; i < response.length(); i++) {
                                         JSONObject pedido = response.getJSONObject(i);
-                                        String filter = pedido.getString("dateCreated");
-                                        String codigo_barra = pedido.getString("barCode");
-                                        pedidos.add(new Pedido(pedido.getInt("id"), " "));
+                                        pedidos.add(new Pedido(pedido.getString("dateCreated"), pedido.getInt("id")));
                                     }
                                     pedidoadapter = new PedidoAdapter(ArmarPedidos.this, pedidos);
                                     listview_pedido.setAdapter(pedidoadapter);

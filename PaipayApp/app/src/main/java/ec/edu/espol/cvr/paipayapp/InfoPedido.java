@@ -297,24 +297,22 @@ public class InfoPedido extends Activity {
                                     JSONObject user_dict = response.getJSONObject("user");
                                     String client_name = user_dict.getString("name");
                                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                                    Date fecha = formatter.parse(response.getString("dateCreated").replaceAll("Z$", "+0000"));
+                                    /*Date fecha = formatter.parse(response.getString("dateCreated").replaceAll("Z$", "+0000"));
                                     DateFormat dateFormat = new SimpleDateFormat(Invariante.format_date);
-                                    String fecha_str = dateFormat.format(fecha);
+                                    String fecha_str = dateFormat.format(fecha);*/
                                     String codigo_barra = response.getString("barCode");
                                     pedido.setUser(client_name);
-                                    pedido.setFecha(fecha);
+                                    pedido.setFecha(response.getString("dateCreated"));
                                     pedido.setCodigo_barra(codigo_barra);
 
                                     view_cliente.setText(view_cliente.getText()+client_name);
-                                    view_fecha.setText(view_fecha.getText()+fecha_str);
+                                    view_fecha.setText(view_fecha.getText()+pedido.getFecha());
                                     view_barras.setText(view_barras.getText()+codigo_barra);
 
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
                                 }
                             }
                         }, new Response.ErrorListener() {

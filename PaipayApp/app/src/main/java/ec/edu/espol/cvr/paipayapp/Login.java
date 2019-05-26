@@ -37,7 +37,7 @@ public class Login extends Activity {
 
 
     private int port = 9000;
-    private String ip = "10.10.1.104";//"172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
+    private String ip = "142.93.244.249";//"172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
     private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
 
