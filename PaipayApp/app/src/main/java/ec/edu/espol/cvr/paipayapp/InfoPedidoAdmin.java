@@ -328,7 +328,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                                     Producto producto = new Producto(detalle_producto.getString("id"));
                                     //cambiar por nombre
                                     producto.setName(detalle_producto.getString("id").substring(0,10));
-                                    detalles_pedido.add(new DetallePedido(producto, detalle_producto.getInt("cantidad")));
+                                    detalles_pedido.add(new DetallePedido(producto, detalle_producto.getInt("qty")));
                                 }
                                 detalles_pedidoadapter.notifyDataSetChanged();
                                 dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),Invariante.path_fotos_pedidos);

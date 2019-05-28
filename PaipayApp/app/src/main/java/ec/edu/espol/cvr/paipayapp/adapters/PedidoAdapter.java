@@ -15,11 +15,20 @@ import java.util.ArrayList;
 public class PedidoAdapter extends ArrayAdapter<Pedido> {
     private ArrayList<Pedido> pedidos;
     private Context context;
+    public boolean delivery;
 
     public PedidoAdapter(Context context, ArrayList<Pedido> pedidos){
         super(context,0, pedidos);
         this.context = context;
         this.pedidos = pedidos;
+        this.delivery = false;
+    }
+
+    public PedidoAdapter(Context context, ArrayList<Pedido> pedidos, boolean delivery){
+        super(context,0, pedidos);
+        this.context = context;
+        this.pedidos = pedidos;
+        this.delivery = delivery;
     }
 
     static class ViewHolder{
@@ -39,7 +48,12 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
         ViewHolder holder = (ViewHolder) convertView.getTag();
         Pedido currentPedido = this.pedidos.get(position);
         holder.codigo.setText("Pedido #" + String.valueOf(currentPedido.getCodigo()));
-        holder.fecha.setText("Fecha : " + currentPedido.getFecha());
+        if(delivery){
+            holder.fecha.setText("Dirección : " + currentPedido.getDireccion());
+        }else{
+            holder.fecha.setText("Fecha : " + currentPedido.getFecha());
+        }
+
         return convertView;
     }
 }

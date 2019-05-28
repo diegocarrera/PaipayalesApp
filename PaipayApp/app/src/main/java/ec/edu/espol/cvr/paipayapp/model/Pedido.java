@@ -96,6 +96,9 @@ public class Pedido {
     }
 
     public void setFecha(String fecha) {
+        if(fecha.length()> 19){
+            fecha = fecha.substring(0,19).replace("T"," ");
+        }
         this.fecha = fecha;
     }
 
