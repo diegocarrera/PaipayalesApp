@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -47,6 +48,7 @@ public class ListarPedidosRepartidor extends Activity {
     private SharedPreferences sharedpreferences;
     private int port;
     private String ip;
+    SwipeRefreshLayout pullToRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,20 @@ public class ListarPedidosRepartidor extends Activity {
         sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
         ip = sharedpreferences.getString("ip", "");
         port = sharedpreferences.getInt("port", 0);
+        pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh);
 
-        listview_pedido = (ListView) findViewById(R.id.listapedidos);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(getApplicationContext(),"Actualizando", Toast.LENGTH_SHORT).show();
+                pedidos.clear();
+                update_list();
+                pullToRefresh.setRefreshing(false);
+                Toast.makeText(getApplicationContext(),"Actualizado", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+            listview_pedido = (ListView) findViewById(R.id.listapedidos);
         listview_pedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -126,11 +140,6 @@ public class ListarPedidosRepartidor extends Activity {
                                     for (int i = 0; i < pedidos_response.length(); i++) {
 
                                         JSONObject pedido = pedidos_response.getJSONObject(i);
-                                        /*
-                                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                                        Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
-                                        System.out.println(fecha);
-                                        */
                                         pedidos.add(new Pedido(pedido.getInt("id"),pedido.getString("user__address")));
                                     }
                                     pedidoadapter = new PedidoAdapter(ListarPedidosRepartidor.this, pedidos);
@@ -164,7 +173,6 @@ public class ListarPedidosRepartidor extends Activity {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         HashMap<String, String> headers = new HashMap<String, String>();
-                        //headers.put("Content-Type", "application/json");
                         headers.put("Authorization", user_token);
                         return headers;
                     }
@@ -174,7 +182,6 @@ public class ListarPedidosRepartidor extends Activity {
             }else{
                 Toast.makeText(this, "IP y/o puerto del servidor no configurado. ", Toast.LENGTH_LONG).show();
             }
-            //pedidoadapter.notifyDataSetChanged();
         }catch (Exception e) {
             e.printStackTrace();
         }

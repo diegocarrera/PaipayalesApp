@@ -35,15 +35,18 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
 public class Login extends Activity {
 
+
     private int port = 5000;
-    private String ip = "172.19.26.213";//"172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
+    private String ip = "192.168.0.23";//"172.19.12.203"; //192.168.0.8 maria belen //172.19.12.203
     private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
+    Activity mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mContext = this;
     }
 
     @Override
@@ -61,15 +64,13 @@ public class Login extends Activity {
     }
 
     public void verificarUsuario(View view) {
-        String email = ((TextView) findViewById(R.id.user)).getText().toString();
-        String password = ((TextView) findViewById(R.id.password)).getText().toString();
+        String email = ((TextView) findViewById(R.id.user)).getText().toString().trim();
+        String password = ((TextView) findViewById(R.id.password)).getText().toString().trim();
         if (!email.contains("@")){
             Toast.makeText(this, Invariante.ERROR_CORREO, Toast.LENGTH_SHORT).show();
             return;
         }
         if (!email.isEmpty() && !password.isEmpty()) {
-            //email = "beleng.c@hotmail.com";
-            //password = "adminadmin";
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("email", email.toLowerCase());
             editor.apply();
@@ -110,19 +111,15 @@ public class Login extends Activity {
         try {
             parameters.put("email", email);
             parameters.put("password", password);
-            System.out.println(email);
-            System.out.println(password);
-            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
             final String server = Invariante.get_server(ip, port);
-
+            System.out.println(server+ "/api/v1/auth/login/");
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                     (Request.Method.POST,server+ "/api/v1/auth/login/" , parameters, new Response.Listener<JSONObject>() {
 
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-
-                                System.out.println(response.toString());
                                 String rol = response.getString("role");
                                 System.out.println("ROOOOOL"+ rol);
                                 //String rol = Invariante.USUARIO_ADMIN;

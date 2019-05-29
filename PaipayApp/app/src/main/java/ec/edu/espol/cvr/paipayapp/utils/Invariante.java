@@ -7,6 +7,10 @@ public class Invariante {
     public static final String PRUEBA = "Modo prueba activado.";
     public static final String TOKEN = "access-token";
     public static final String ROUTE = "route_id";
+    public static final int LOCATION_INTERVAL_MIN = 8000;
+    public static final int LOCATION_DISTANCE_MIN = 5;
+
+
 
 
     /*Login.java*/
@@ -39,6 +43,9 @@ public class Invariante {
 
     public static final String PUNTO_REPARTO = "punto_reparto";
     public static final String ERROR_PUNTO_REPARTO = "No tiene configurado un punto de reparto. Debe configurar uno. ";
+
+    /* InfoPedido.java*/
+    public static final String CREATE_ROUTE_ERROR = "Requerimiento no procesado, inténtelo de nuevo";
 
     public static String get_estado_str(int id){
         switch (id){

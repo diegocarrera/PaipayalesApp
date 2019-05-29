@@ -2,6 +2,7 @@ package ec.edu.espol.cvr.paipayapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,7 +14,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -39,29 +42,30 @@ import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import ec.edu.espol.cvr.paipayapp.adapters.DetallePedidoAdapter;
-import ec.edu.espol.cvr.paipayapp.adapters.PedidoAdapter;
-import ec.edu.espol.cvr.paipayapp.model.DetallePedido;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
-import ec.edu.espol.cvr.paipayapp.model.Producto;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
-import static android.os.SystemClock.sleep;
+import static java.lang.Thread.sleep;
+
 
 public class InfoPedido extends Activity {
+    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 112;
     private Pedido pedido;
     private Button finalizar, cancelar, iniciar;
     private File foto_pedido = null;
     private File dir;
     TextView view_cliente, view_direccion, view_fecha, view_barras;
     int route_id;
-    boolean route_created,end_route, on_my_way;
+    volatile static boolean end_route, on_my_way;
+    //volatile static boolean route_created;
+    String route_created;
     LocationManager lm;
+    private Context mContext=InfoPedido.this;
+    RequestQueue requestQueue;
 
 
     @Override
@@ -73,9 +77,10 @@ public class InfoPedido extends Activity {
         view_cliente = (TextView) findViewById(R.id.cliente_tv);
         view_direccion = (TextView) findViewById(R.id.direccion_tv);
         view_barras = (TextView) findViewById(R.id.cod_barras_tv);
-        route_created = false;
+        route_created = "false";
         end_route = false; // flag que indica si el repartidor presiono el boton finalizar entrega
         on_my_way = false; // flag que indica si el repartidor esta en medio de una ruta
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
 
 
         finalizar = (Button) findViewById(R.id.finalizarRuta);
@@ -153,7 +158,7 @@ public class InfoPedido extends Activity {
                         if (result.getContents() != null) {
                             String codigo_barra = result.getContents();
                             if (pedido.getCodigo_barra().equals(codigo_barra)) {
-                                Toast.makeText(InfoPedido.this, "Codigo de barras correcto. Pedido entregado satisfactoriamente.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(InfoPedido.this, "Codigo de barras coincide. Entrega exitosa.", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(InfoPedido.this, "El código de barras no coincide con el asociado al pedido. Este no es el pedido del cliente", Toast.LENGTH_LONG).show();
                             }
@@ -187,70 +192,8 @@ public class InfoPedido extends Activity {
         if (!gps_enabled) {
             Toast.makeText(InfoPedido.this, "Debe encender el GPS para poder iniciar la ruta.", Toast.LENGTH_SHORT).show();
         } else {
-
-            //Crear una ruta
-            boolean result = crearRuta();
-
-            if (result) {
-                //cuando se inicia la ruta, el botón de iniciar se desactiva
-                this.iniciar.setEnabled(false);
-                this.iniciar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
-
-                //y se activan los botones de finalizar y cancelar ruta
-                this.finalizar.setEnabled(true);
-                this.finalizar.setBackgroundColor(getResources().getColor(R.color.color_botones));
-                this.cancelar.setEnabled(true);
-                this.cancelar.setBackgroundColor(getResources().getColor(R.color.color_botones));
-
-                //se indica que el repartidor esta en una ruta
-                this.on_my_way = true;
-
-                // Define a listener that responds to location updates
-                LocationListener locationListener = new LocationListener() {
-                    public void onLocationChanged(Location location) {
-                        if(on_my_way){
-                            System.out.println("TOMANDO COORDENADAS");
-                            // Called when a new location is found by the GPS location provider.
-                            Toast.makeText(
-                                    getBaseContext(),
-                                    "Location changed: Lat: " + location.getLatitude() + " Lng: "
-                                            + location.getLongitude(), Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            // stop location updating
-                            lm.removeUpdates(this);
-                            lm = null;
-                        }
-
-                    }
-
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                    }
-
-                    public void onProviderEnabled(String provider) {
-                    }
-
-                    public void onProviderDisabled(String provider) {
-                    }
-                };
-
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 8000, 3, locationListener); //milliseconds, meters
-
-            }
-            else{
-                System.out.println("FALLO AL CREAR RUTA");
-            }
+            //SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+            crearRuta();
 
         }
     }
@@ -284,7 +227,6 @@ public class InfoPedido extends Activity {
             if(port != 0 && !ip.equals("")){
 
                 //Armo el request
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 String server = Invariante.get_server(ip, port);
                 String new_path = server + "/api/v1/purchases/info/"+id;
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -331,20 +273,8 @@ public class InfoPedido extends Activity {
                                     Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        })
-                {
+                        });
 
-                    /**
-                     * Passing some request headers
-
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        //headers.put("Content-Type", "application/json");
-                        headers.put("Authorization", user_token);
-                        return headers;
-                    }*/
-                };
                 requestQueue.add(jsonObjectRequest);
 
             }else{
@@ -358,7 +288,7 @@ public class InfoPedido extends Activity {
 
     }
 
-    boolean crearRuta(){
+    void crearRuta(){
 
         /*
         Funcion que crea una ruta, mandando un requerimiento POST al servidor.
@@ -372,13 +302,13 @@ public class InfoPedido extends Activity {
         final SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
         String ip = sharedpreferences.getString("ip","");
         int port = sharedpreferences.getInt("port",0);
+        //si ya existe una ruta creada, ya no se hace el req al servidor, sino todo lo otro que resta
 
         try {
 
             if(port != 0 && !ip.equals("")){
 
                 //Armo el request
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 String server = Invariante.get_server(ip, port);
                 String new_path = server + "/tracks/api/v1/routes";
                 //agregar los parametros necesarios
@@ -394,16 +324,19 @@ public class InfoPedido extends Activity {
                                 try {
 
                                     route_id = Integer.parseInt(response.getString("id"));
-                                    route_created = true;
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
-                                    //put route_id in shared preferences
+                                    //agregar el id de la ruta en shared preferences
                                     editor.putInt(Invariante.ROUTE, route_id);
                                     editor.apply();
+
+                                    iniciarRutaLayoutPrepare();
+                                    iniciarGeolocalizacion();
 
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                                    System.out.println(Invariante.ERROR_LOGIN_RED);
+                                    Toast.makeText(InfoPedido.this, Invariante.CREATE_ROUTE_ERROR, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -414,7 +347,8 @@ public class InfoPedido extends Activity {
                                     int code = error.networkResponse.statusCode;
                                     JSONObject json = new JSONObject(new String(error.networkResponse.data));
                                     String message = "Error " + String.valueOf(code) + json.getString("message");
-                                    Toast.makeText(InfoPedido.this, message, Toast.LENGTH_SHORT).show();
+                                    System.out.println(message);
+                                    Toast.makeText(InfoPedido.this, Invariante.CREATE_ROUTE_ERROR, Toast.LENGTH_SHORT).show();
                                 }catch (Exception e) {
                                     e.printStackTrace();
                                     Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
@@ -433,18 +367,6 @@ public class InfoPedido extends Activity {
                      return headers;
                      }
 
-                    /**
-                     * Passing some parameters
-                     */
-
-                    /*
-                    protected Map<String, String> getParams()
-                    {
-                        Map<String, String>  params = new HashMap<String, String>();
-                        params.put("purchase", Integer.toString(pedido.getCodigo()));
-
-                        return params;
-                    }*/
                 };
                 requestQueue.add(jsonObjectRequest);
 
@@ -456,13 +378,10 @@ public class InfoPedido extends Activity {
             e.printStackTrace();
 
         }
-        System.out.println(route_created);
-        return route_created;
-
 
     }
 
-    void postSteps(String latitude, String longitude){
+    void postSteps(double latitude, double longitude){
         /*Funcion que envía coordenadas de la ruta al servidor
         Header:
             Authorization: xxx
@@ -477,23 +396,18 @@ public class InfoPedido extends Activity {
         int port = sharedpreferences.getInt("port",0);
         int route = sharedpreferences.getInt(Invariante.ROUTE,0); //obtener el id de la ruta de los shared preferences
         try {
-
             if(port != 0 && !ip.equals("")){
 
                 //Armo el request
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 String server = Invariante.get_server(ip, port);
                 String new_path = server + "/tracks/api/v1/steps";
                 //agregar los parametros necesarios
                 JSONObject jsonBody = new JSONObject();
-                jsonBody.put("latitude", latitude);
-                jsonBody.put("longitude", longitude);
+                jsonBody.put("latitude", Double.toString(latitude));
+                jsonBody.put("longitude", Double.toString(longitude));
                 jsonBody.put("route", Integer.toString(route));
-                System.out.println("POST STEPSSSSSSSSSSSSSSS");
-                System.out.println(latitude+" "+longitude+" "+route_id);
 
-
-
+                //Envío requerimiento al servidor
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.POST, new_path, jsonBody, new Response.Listener<JSONObject>() {
 
@@ -536,18 +450,6 @@ public class InfoPedido extends Activity {
                         return headers;
                     }
 
-                    /**
-                     * Passing some parameters
-                     */
-
-                    /*
-                    protected Map<String, String> getParams()
-                    {
-                        Map<String, String>  params = new HashMap<String, String>();
-                        params.put("purchase", Integer.toString(pedido.getCodigo()));
-
-                        return params;
-                    }*/
                 };
                 requestQueue.add(jsonObjectRequest);
 
@@ -558,21 +460,96 @@ public class InfoPedido extends Activity {
         }catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
     }
-    void finalizarRuta(){
+
+    void finalizarRuta(View view){
         /*
         Funcion que se activa cuando el repartidor presiona el boton de finalizar ruta.
-
         */
         this.on_my_way = false;
-
         asociarTag(InfoPedido.this.getCurrentFocus());
     }
 
+    /*
+    * Función para pedir al usuario que autorice la geo localización*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSION_ACCESS_FINE_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //call get location here
+                } else {
+                    Toast.makeText(mContext, "The app was not allowed to access your location", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    void iniciarRutaLayoutPrepare(){
+        /*
+        * Función que deshabilita y habilita los botones cuando se inicia una entrega
+        * */
+
+        //cuando se inicia la ruta, el botón de iniciar se desactiva
+        iniciar.setEnabled(false);
+        iniciar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+
+        //y se activan los botones de finalizar y cancelar ruta
+        finalizar.setEnabled(true);
+        finalizar.setBackgroundColor(getResources().getColor(R.color.color_botones));
+        cancelar.setEnabled(true);
+        cancelar.setBackgroundColor(getResources().getColor(R.color.color_botones));
+    }
+
+    void iniciarGeolocalizacion(){
+        /*
+        * Función que empieza a tomar las coordenadas del repartidor
+        */
+
+        //se indica que el repartidor esta en una ruta
+        on_my_way = true;
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                if(on_my_way){
+                    // Called when a new location is found by the GPS location provider.
+                    System.out.println("Location changed: Lat: " + location.getLatitude() + " Lng: " + location.getLongitude());
+                    postSteps(location.getLatitude(),location.getLongitude());
+                }
+                else{
+                    // stop location updating
+                    lm.removeUpdates(this);
+                    lm = null;
+                }
+
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            System.out.println("NO PASA EL CHECK");
+            ActivityCompat.requestPermissions((Activity) mContext, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    InfoPedido.MY_PERMISSION_ACCESS_FINE_LOCATION );
+
+        }
+        else{
+            Toast.makeText(getBaseContext(), "Entrega iniciada, diríjase a su destino", Toast.LENGTH_SHORT).show();
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Invariante.LOCATION_INTERVAL_MIN, Invariante.LOCATION_DISTANCE_MIN, locationListener); //milliseconds, meters
+
+        }
+
+    }
 
 
 }
