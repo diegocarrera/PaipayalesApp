@@ -54,9 +54,8 @@ public class ArmarPedidos extends Activity {
             Pedido tmp_pedido = pedidos.get(position);
             pedidos.clear();
             pedidoadapter.notifyDataSetChanged();
-            intent.putExtra("direccion",tmp_pedido.getDireccion());
+            intent.putExtra("fecha",tmp_pedido.getFecha());
             intent.putExtra("id_pedido", tmp_pedido.getCodigo());
-            intent.putExtra("detalle",tmp_pedido.getDetallePedidos());
             startActivity(intent);
             finish();
             }
@@ -125,19 +124,11 @@ public class ArmarPedidos extends Activity {
                                 try {
                                     for (int i = 0; i < response.length(); i++) {
                                         JSONObject pedido = response.getJSONObject(i);
-                                        String filter = pedido.getString("dateCreated");
-                                        //Date fecha = new SimpleDateFormat(Invariante.FORMAT_API_FECHA).parse(filter);
-                                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                                        Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
-                                        pedidos.add(new Pedido(pedido.getInt("id"),pedido.getString("user__address")));
-
+                                        pedidos.add(new Pedido(pedido.getString("dateCreated"), pedido.getInt("id")));
                                     }
                                     pedidoadapter = new PedidoAdapter(ArmarPedidos.this, pedidos);
                                     listview_pedido.setAdapter(pedidoadapter);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(ArmarPedidos.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
-                                }catch (JSONException e) {
+                                } catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(ArmarPedidos.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
                                 }

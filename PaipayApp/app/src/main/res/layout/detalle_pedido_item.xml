@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_box"
-        android:padding="0.1dp"
+        android:padding="5dp"
         android:background="@color/fondo_lista" />
     <TextView
         android:id="@+id/editproductoNombre"

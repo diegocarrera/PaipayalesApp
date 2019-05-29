@@ -2,6 +2,7 @@ import os
 import sys
 import django
 import datetime
+import json
 from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'inventoryms.settings')
@@ -99,10 +100,10 @@ delivery_4.token = str(token)
 delivery_4.name = "delivery 4"
 delivery_4.save()
 
-category_1 = Category.objects.create(name="frutas")
-category_2 = Category.objects.create(name="verduras")
-category_3 = Category.objects.create(name="organico")
-category_4 = Category.objects.create(name="arroz")
+category_1 = Category.objects.create(name="Frutas")
+category_2 = Category.objects.create(name="Verduras")
+category_3 = Category.objects.create(name="Organico")
+category_4 = Category.objects.create(name="Arroz")
 
 product_1 = Product.objects.create(name="ciruela",typeSelling="unit",price=12.2,category=category_1)
 product_1.photo = "1.jpg"
@@ -142,116 +143,84 @@ centro_3 = DeliveryCenter.objects.create(name="Secundario, Sur", latitudeGeo=4.1
 
 ####### pedidos ########################
 products_list_1 = []
-products_list_1.append({"id":product_1.id, "cantidad": 2})
-products_list_1.append({"id":product_2.id, "cantidad": 3})
+print(product_2.id)
+products_list_1.append({"id":product_1.id.urn[9:], "qty": 2})
+products_list_1.append({"id":product_2.id.urn[9:], "qty": 3})
+products_list_1= json.dumps(products_list_1)
+print(product_2.id)
 
 products_list_2 = []
-products_list_2.append({"id":product_3.id, "cantidad": 4})
-products_list_2.append({"id":product_4.id, "cantidad": 5})
-products_list_2.append({"id":product_5.id, "cantidad": 3})
-products_list_2.append({"id":product_5.id, "cantidad": 6})
+products_list_2.append({"id":product_3.id.urn[9:], "qty": 4})
+products_list_2.append({"id":product_4.id.urn[9:], "qty": 5})
+products_list_2.append({"id":product_5.id.urn[9:], "qty": 3})
+products_list_2.append({"id":product_5.id.urn[9:], "qty": 6})
+products_list_2= json.dumps(products_list_2)
 
 products_list_3 = []
-products_list_3.append({"id":product_6.id, "cantidad": 3})
-products_list_3.append({"id":product_7.id, "cantidad": 4})
+products_list_3.append({"id":product_6.id.urn[9:], "qty": 3})
+products_list_3.append({"id":product_7.id.urn[9:], "qty": 4})
+products_list_3= json.dumps(products_list_3)
 ########### estado solIcitado
 SOLICITADO = 0
-purchase_1 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO)
+purchase_1 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO, user=client_1)
 purchase_1.products = products_list_1
 purchase_1.save()
-purchase_1.user.add(client_1)
-purchase_1.user.add(delivery_1)
-purchase_1.save()
 
-purchase_2 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO)
+purchase_2 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO,user=client_2)
 purchase_2.products = products_list_2
 purchase_2.save()
-purchase_2.user.add(client_2)
-purchase_2.user.add(delivery_1)
-purchase_2.save()
 
-purchase_3 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO)
+purchase_3 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO, user=client_3)
 purchase_3.products = products_list_3
 purchase_3.save()
-purchase_3.user.add(client_3)
-purchase_3.user.add(delivery_1)
-purchase_3.save()
 
-purchase_4 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO)
+purchase_4 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=12.2, status=SOLICITADO,user=client_1)
 purchase_4.products = products_list_1
 purchase_4.save()
-purchase_4.user.add(client_1)
-purchase_4.user.add(delivery_1)
-purchase_4.save()
 
-purchase_5 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO)
+purchase_5 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO,user=client_2)
 purchase_5.products = products_list_2
 purchase_5.save()
-purchase_5.user.add(client_2)
-purchase_5.user.add(delivery_2)
-purchase_5.save()
 
-purchase_6 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO)
+purchase_6 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO,user=client_1)
 purchase_6.products = products_list_2
 purchase_6.save()
-purchase_6.user.add(client_1)
-purchase_6.user.add(delivery_2)
-purchase_6.save()
 
-purchase_7 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO)
+purchase_7 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO, user=client_3)
 purchase_7.products = products_list_2
 purchase_7.save()
-purchase_7.user.add(client_3)
-purchase_7.user.add(delivery_2)
-purchase_7.save()
 
-purchase_8 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO)
+purchase_8 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO, user=client_3)
 purchase_8.products = products_list_3
 purchase_8.save()
-purchase_8.user.add(client_3)
-purchase_8.user.add(delivery_3)
-purchase_8.save()
 
-purchase_9 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO)
+purchase_9 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=SOLICITADO,user=client_3)
 purchase_9.products = products_list_1
-purchase_9.save()
-purchase_9.user.add(client_3)
-purchase_9.user.add(delivery_3)
 purchase_9.save()
 
 ########### estado armado
 ARMADO = 1
-purchase_10 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000001")
+purchase_10 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000001",user=client_1)
 purchase_10.products = products_list_1
-purchase_10.save()
-purchase_10.user.add(client_1)
-purchase_10.user.add(delivery_1)
+purchase_10.delivery_man = delivery_1
 purchase_10.save()
 
-purchase_11 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000002")
+purchase_11 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000002", user=client_2)
 purchase_11.products = products_list_1
-purchase_11.save()
-purchase_11.user.add(client_2)
-purchase_11.user.add(delivery_1)
+purchase_11.delivery_man = delivery_1
 purchase_11.save()
 
-purchase_12 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000003")
+purchase_12 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000003",user=client_3)
 purchase_12.products = products_list_1
-purchase_12.save()
-purchase_12.user.add(client_3)
-purchase_12.user.add(delivery_1)
+purchase_12.delivery_man = delivery_1
 purchase_12.save()
 
-purchase_13 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000004")
+purchase_13 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000004",user=client_2)
 purchase_13.products = products_list_1
-purchase_13.save()
-purchase_13.user.add(client_2)
-purchase_13.user.add(delivery_2)
+purchase_13.delivery_man = delivery_2
 purchase_13.save()
 
-purchase_14 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000005")
+purchase_14 = Purchase.objects.create(deliveryCenter=centro_1,totalPrice=13.2, status=ARMADO, barCode="000000000005",user=client_3)
 purchase_14.products = products_list_1
-purchase_14.save()
-purchase_14.user.add(client_3)
-purchase_14.user.add(delivery_2)
+purchase_14.delivery_man = delivery_2
 purchase_14.save()

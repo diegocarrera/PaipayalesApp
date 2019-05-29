@@ -29,6 +29,6 @@
         android:background="#45547e1a"
         android:textColor="@color/texto_sin_opac"
         android:textSize="17sp"
+        android:padding="10dp"
         android:layout_marginBottom="5dp"/>
-
 </LinearLayout>

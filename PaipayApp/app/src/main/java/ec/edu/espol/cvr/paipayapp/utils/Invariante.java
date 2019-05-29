@@ -44,20 +44,28 @@ public class Invariante {
     public static final String PUNTO_REPARTO = "punto_reparto";
     public static final String ERROR_PUNTO_REPARTO = "No tiene configurado un punto de reparto. Debe configurar uno. ";
 
+
     /* InfoPedido.java*/
     public static final String CREATE_ROUTE_ERROR = "Requerimiento no procesado, inténtelo de nuevo";
 
+    public static final int ESTADO_SOLICITADO = 0;
+    public static final int ESTADO_ARMADO = 1;
+    public static final int ESTADO_POR_ENTREGAR = 2;
+    public static final int ESTADO_ENTREGADO = 3;
+    public static final int ESTADO_CANCELADO = -1;
+
+
     public static String get_estado_str(int id){
         switch (id){
-            case 0:
+            case ESTADO_SOLICITADO:
                 return "SOLICITADO";
-            case 1:
+            case ESTADO_ARMADO:
                 return "ARMADO";
-            case 2:
+            case ESTADO_POR_ENTREGAR:
                 return "POR ENTREGAR";
-            case 3:
+            case ESTADO_ENTREGADO:
                 return "ENTREGADO";
-            case -1:
+            case ESTADO_CANCELADO:
                 return "CANCELADO";
             default:
                 return "Estado Desconocido";

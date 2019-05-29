@@ -92,14 +92,9 @@ public class ListarPedidosRepartidor extends Activity {
         boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
         if (test_mode) {
             for (int i = 0; i < 3; i++) {
-                try {
-                    Date fecha = new SimpleDateFormat(Invariante.format_date).parse(i + "/03/2019");
-                    pedidos.add(new Pedido(fecha, i + 1));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                pedidos.add(new Pedido("23/23/2019", i + 1));
             }
-            pedidoadapter = new PedidoAdapter(this, pedidos);
+            pedidoadapter = new PedidoAdapter(this, pedidos, true);
             pedidoadapter.notifyDataSetChanged();
             listview_pedido.setAdapter(pedidoadapter);
         } else {
@@ -135,14 +130,21 @@ public class ListarPedidosRepartidor extends Activity {
                             public void onResponse(JSONObject response) {
 
                                 try {
+                                    System.out.println(response);
                                     JSONArray pedidos_response = response.getJSONArray("data");
 
                                     for (int i = 0; i < pedidos_response.length(); i++) {
 
                                         JSONObject pedido = pedidos_response.getJSONObject(i);
+                                        System.out.println(pedido);
+                                        /*
+                                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                                        Date fecha = formatter.parse(pedido.getString("dateCreated").replaceAll("Z$", "+0000"));
+                                        System.out.println(fecha);
+                                        */
                                         pedidos.add(new Pedido(pedido.getInt("id"),pedido.getString("user__address")));
                                     }
-                                    pedidoadapter = new PedidoAdapter(ListarPedidosRepartidor.this, pedidos);
+                                    pedidoadapter = new PedidoAdapter(ListarPedidosRepartidor.this, pedidos, true);
                                     listview_pedido.setAdapter(pedidoadapter);
 
                                 } catch (JSONException e) {

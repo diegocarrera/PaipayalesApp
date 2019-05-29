@@ -55,7 +55,7 @@ public class DetallePedidoAdapter extends ArrayAdapter<DetallePedido> {
         ViewHolder holder = (ViewHolder) convertView.getTag();
         final DetallePedido currentPedido = this.detallesPedidos.get(position);
         holder.productoNombre.setText(currentPedido.getProducto().getName());
-        holder.cantidad.setText("cantidad: " + Float.toString(currentPedido.getCantidad()) + " " + currentPedido.getProducto().getUnit() );
+        holder.cantidad.setText("cant: " + Float.toString(currentPedido.getCantidad()) + " " + currentPedido.getProducto().getUnit() );
         holder.check.setChecked(currentPedido.is_selected());
         return convertView;
     }
