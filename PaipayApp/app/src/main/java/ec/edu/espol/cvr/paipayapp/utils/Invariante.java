@@ -7,8 +7,8 @@ public class Invariante {
     public static final String PRUEBA = "Modo prueba activado.";
     public static final String TOKEN = "access-token";
     public static final String ROUTE = "route_id";
-    public static final int LOCATION_INTERVAL_MIN = 8000;
-    public static final int LOCATION_DISTANCE_MIN = 5;
+    public static final int LOCATION_INTERVAL_MIN = 0; //8000
+    public static final int LOCATION_DISTANCE_MIN = 0;
 
 
 

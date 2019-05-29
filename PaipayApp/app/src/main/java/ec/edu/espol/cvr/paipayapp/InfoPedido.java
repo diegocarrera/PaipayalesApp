@@ -11,15 +11,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,27 +32,23 @@ import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
-import static java.lang.Thread.sleep;
 
 
 public class InfoPedido extends Activity {
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 112;
+
     private Pedido pedido;
     private Button finalizar, cancelar, iniciar;
     private File foto_pedido = null;
@@ -159,6 +154,7 @@ public class InfoPedido extends Activity {
                             String codigo_barra = result.getContents();
                             if (pedido.getCodigo_barra().equals(codigo_barra)) {
                                 Toast.makeText(InfoPedido.this, "Codigo de barras coincide. Entrega exitosa.", Toast.LENGTH_LONG).show();
+                                this.deshabilitarBotones();
                             } else {
                                 Toast.makeText(InfoPedido.this, "El código de barras no coincide con el asociado al pedido. Este no es el pedido del cliente", Toast.LENGTH_LONG).show();
                             }
@@ -171,6 +167,24 @@ public class InfoPedido extends Activity {
         }
     }
 
+    public void cancelarRuta(View view){
+         /*
+        Funcion que se activa cuando el repartidor presiona el boton de finalizar ruta.
+        */
+        this.on_my_way = false;
+        this.deshabilitarBotones();
+        Toast.makeText(InfoPedido.this, "Ruta cancelada", Toast.LENGTH_LONG).show();
+
+    }
+
+    public void finalizarRuta(View view){
+         /*
+        Funcion que se activa cuando el repartidor presiona el boton de finalizar ruta.
+        */
+        this.on_my_way = false;
+        asociarTag(InfoPedido.this.getCurrentFocus());
+
+    }
     public void iniciarRuta(View view) {
 
         /*funcion para mandar por POST la ubicación del usuario
@@ -179,7 +193,7 @@ public class InfoPedido extends Activity {
         //boton de iniciarRuta debe estar deshabilitado inicialmente
 
         // Acquire a reference to the system Location Manager
-        lm = (LocationManager) InfoPedido.this.getSystemService(InfoPedido.LOCATION_SERVICE);
+        lm = (LocationManager) InfoPedido.this.getSystemService(this.LOCATION_SERVICE);
         long latitude, longitude;
 
         boolean gps_enabled = false;
@@ -460,14 +474,6 @@ public class InfoPedido extends Activity {
         }
     }
 
-    void finalizarRuta(View view){
-        /*
-        Funcion que se activa cuando el repartidor presiona el boton de finalizar ruta.
-        */
-        this.on_my_way = false;
-        asociarTag(InfoPedido.this.getCurrentFocus());
-    }
-
     /*
     * Función para pedir al usuario que autorice la geo localización*/
     @Override
@@ -535,20 +541,52 @@ public class InfoPedido extends Activity {
             }
         };
 
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-            System.out.println("NO PASA EL CHECK");
-            ActivityCompat.requestPermissions((Activity) mContext, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    InfoPedido.MY_PERMISSION_ACCESS_FINE_LOCATION );
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                System.out.println("NO PASA EL CHECK");
+                ActivityCompat.requestPermissions((Activity) mContext, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                        InfoPedido.MY_PERMISSION_ACCESS_FINE_LOCATION );
 
+            }
+            else{
+                Toast.makeText(getBaseContext(), "Entrega iniciada, diríjase a su destino", Toast.LENGTH_SHORT).show();
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Invariante.LOCATION_INTERVAL_MIN, Invariante.LOCATION_DISTANCE_MIN, locationListener); //milliseconds, meters
+
+            }
         }
-        else{
-            Toast.makeText(getBaseContext(), "Entrega iniciada, diríjase a su destino", Toast.LENGTH_SHORT).show();
+        else {
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, Invariante.LOCATION_INTERVAL_MIN, Invariante.LOCATION_DISTANCE_MIN, locationListener); //milliseconds, meters
 
         }
 
+
     }
 
+
+    private void requestPermission(){
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
+
+            Toast.makeText(mContext,"GPS permission allows us to access location data. Please allow in App Settings for additional functionality.",Toast.LENGTH_LONG).show();
+
+        } else {
+
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSION_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    void deshabilitarBotones(){
+        /*
+         * Función que deshabilita todos los botones cuando se finaliza/cancela una entrega
+         * */
+
+        iniciar.setEnabled(false);
+        iniciar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+        finalizar.setEnabled(false);
+        finalizar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+        cancelar.setEnabled(false);
+        cancelar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+    }
 
 }
 

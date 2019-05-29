@@ -93,7 +93,7 @@
             android:layout_weight="1"
             android:background="@color/color_botones"
             android:enabled="false"
-            android:onClick="AsociarTag"
+            android:onClick="cancelarRuta"
             android:text="@string/cancelarRuta" />
 
     </LinearLayout>
