@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
         android:src="@drawable/logo" />
 
     <ImageView
@@ -21,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="139dp"
+        android:layout_marginTop="120dp"
         android:src="@drawable/login_registro" />
 
     <ImageView
@@ -44,7 +43,7 @@
             android:id="@+id/user"
             android:layout_width="305dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:ems="10"
             android:hint="@string/correo_electronico"
             android:inputType="textPersonName"

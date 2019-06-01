@@ -68,7 +68,7 @@
     <ListView
         android:id="@+id/listadetallepedidos"
         android:layout_width="match_parent"
-        android:layout_height="213dp"
+        android:layout_height="140dp"
         android:layout_below="@id/editfecha"
         android:layout_margin="5dp"
         android:clickable="true"

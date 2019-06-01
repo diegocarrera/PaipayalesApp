@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
         android:src="@drawable/logo" />
 
     <ImageView
@@ -20,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="115dp"
         android:src="@drawable/login_registro" />
 
     <ImageView
@@ -29,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_registro"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:src="@drawable/login_registrate" />
 
@@ -37,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_registrate"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
         android:orientation="vertical">
 
         <EditText
@@ -53,6 +56,7 @@
         <EditText
             android:id="@+id/password"
             android:layout_width="305dp"
+            android:layout_marginTop="15dp"
             android:layout_height="wrap_content"
             android:textColor="@color/texto_sin_opac"
             android:ems="10"

@@ -17,7 +17,7 @@
         android:background="@drawable/armar_pedido"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="20dp" />
 
@@ -42,7 +42,7 @@
         android:layout_below="@id/armar_pedido"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/consultar"
         android:onClick="consultar_pedido" />
 
@@ -67,7 +67,7 @@
         android:layout_below="@id/consultar_pedido"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/configuracion"
         android:onClick="opciones_bodega" />
 

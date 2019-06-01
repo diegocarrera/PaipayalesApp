@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/check_box"
         android:padding="5dp"
+        android:layout_weight="0.5"
         android:background="@color/fondo_lista" />
     <TextView
         android:id="@+id/editproductoNombre"

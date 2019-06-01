@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- activity_login -->
-    <string name="cont_inv">Continuar como invitado</string>
+    <string name="cont_inv"></string>
     <string name="correo_electronico">Correo electrónico</string>
     <string name="contrasena">contraseña</string>
 
