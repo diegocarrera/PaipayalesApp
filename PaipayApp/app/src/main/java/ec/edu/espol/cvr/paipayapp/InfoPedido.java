@@ -117,6 +117,15 @@ public class InfoPedido extends Activity {
     }
 
     public void asociarTag(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this,"camera permission granted",Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this,"No tiene los permisos requeridos",Toast.LENGTH_LONG).show();
+                return ;
+            }
+        }
         IntentIntegrator integrator = new IntentIntegrator(InfoPedido.this);
         integrator.setCaptureActivity(CaptureActivityPortrait.class);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);

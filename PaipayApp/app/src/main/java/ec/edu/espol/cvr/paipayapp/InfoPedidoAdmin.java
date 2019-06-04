@@ -1,13 +1,17 @@
 package ec.edu.espol.cvr.paipayapp;
 
 import android.app.Activity;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -185,6 +189,15 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     }
 
     public void AsociarTag(View view){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this,"camera permission granted",Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this,"No tiene los permisos requeridos",Toast.LENGTH_LONG).show();
+                return ;
+            }
+        }
         IntentIntegrator integrator = new IntentIntegrator(InfoPedidoAdmin.this);
         integrator.setCaptureActivity(CaptureActivityPortrait.class);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
