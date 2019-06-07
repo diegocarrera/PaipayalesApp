@@ -27,7 +27,11 @@ public class Pedido {
     }
 
     public Pedido(String fecha, int codigo) {
-        this.fecha = fecha.substring(0,19).replace("T"," ");
+        if(fecha.length()> 19) {
+            this.fecha = fecha.substring(0, 19).replace("T", " ");
+        }else{
+            this.fecha = fecha;
+        }
         this.codigo = codigo;
         this.codigo_barra = "";
     }
@@ -98,6 +102,8 @@ public class Pedido {
     public void setFecha(String fecha) {
         if(fecha.length()> 19){
             fecha = fecha.substring(0,19).replace("T"," ");
+        }else{
+            this.fecha = fecha;
         }
         this.fecha = fecha;
     }

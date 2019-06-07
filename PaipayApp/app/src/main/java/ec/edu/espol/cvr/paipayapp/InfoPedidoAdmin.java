@@ -340,7 +340,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                                     JSONObject detalle_producto = jsonarr.getJSONObject(i);
                                     Producto producto = new Producto(detalle_producto.getString("id"));
                                     //cambiar por nombre
-                                    producto.setName(detalle_producto.getString("id").substring(0,10));
+                                    producto.setName(detalle_producto.getString("name"));
                                     detalles_pedido.add(new DetallePedido(producto, detalle_producto.getInt("qty")));
                                 }
                                 detalles_pedidoadapter.notifyDataSetChanged();
