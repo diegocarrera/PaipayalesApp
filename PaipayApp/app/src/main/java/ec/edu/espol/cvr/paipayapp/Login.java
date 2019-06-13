@@ -171,15 +171,18 @@ public class Login extends Activity {
                         .setCancelable(false)
                         .setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogBox, int id) {
-                                String port = userInputPort.getText().toString();
-                                String ip = userInputIP.getText().toString();
-                                if (!port.isEmpty() && !ip.isEmpty()){
+                                String port_new = userInputPort.getText().toString();
+                                String ip_new = userInputIP.getText().toString();
+                                if (!port_new.isEmpty() && !ip_new.isEmpty()){
                                     try{
-                                        int port_int = Integer.parseInt(port);
+                                        int port_int = Integer.parseInt(port_new);
                                         SharedPreferences.Editor editor = sharedpreferences.edit();
-                                        editor.putString("ip", ip.toLowerCase());
+                                        editor.putString("ip", ip_new.toLowerCase());
                                         editor.putInt("port", port_int);
                                         editor.apply();
+                                        ip = ip_new.toLowerCase();
+                                        port = port_int;
+
                                         Toast.makeText(Login.this, Invariante.CONF_ACTUALIZADO, Toast.LENGTH_LONG).show();
                                     }catch (Exception e){
                                         Toast.makeText(Login.this, Invariante.CONF_ERROR_1, Toast.LENGTH_LONG).show();

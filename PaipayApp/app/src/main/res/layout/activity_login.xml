@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="139dp"
         android:src="@drawable/login_registro" />
@@ -27,6 +28,7 @@
         android:id="@+id/login_registrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_below="@+id/login_registro"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
