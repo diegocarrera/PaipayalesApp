@@ -10,6 +10,7 @@
     <string name="consultar_pedido">CONSULTAR ESTADO PEDIDO</string>
     <string name="opciones_bodega">PUNTO DE REPARTO</string>
     <string name="selecciona_pedido">Selecciona un pedido:</string>
+    <string name="registro">Registro</string>
 
     <!-- activity_info_pedido -->
     <string name="codigo_pedido">ID pedido : </string>

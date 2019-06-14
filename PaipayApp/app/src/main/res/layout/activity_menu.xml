@@ -17,7 +17,7 @@
         android:background="@drawable/armar_pedido"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="20dp" />
 
@@ -31,7 +31,7 @@
         android:fontFamily="sans-serif-smallcaps"
         android:textColor="@color/opciones_menu"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/arm_pedido"
         android:typeface="monospace" />
 
@@ -42,7 +42,7 @@
         android:layout_below="@id/armar_pedido"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/consultar"
         android:onClick="consultar_pedido" />
 
@@ -54,7 +54,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/consultar_pedido"
         android:textColor="@color/opciones_menu"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="15dp"
         android:textStyle="bold"
         android:textSize="15sp"
         android:fontFamily="sans-serif-smallcaps"
@@ -67,7 +67,7 @@
         android:layout_below="@id/consultar_pedido"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/configuracion"
         android:onClick="opciones_bodega" />
 
@@ -84,4 +84,29 @@
         android:textSize="15sp"
         android:fontFamily="sans-serif-smallcaps"
         android:typeface="monospace" />
+
+    <ImageView
+        android:id="@+id/login_registro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/opciones_bodega"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/login_registro" />
+
+    <TextView
+        android:id="@+id/registro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_registro"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="@string/registro"
+        android:textColor="@color/opciones_menu"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:typeface="monospace" />
+
 </RelativeLayout>
