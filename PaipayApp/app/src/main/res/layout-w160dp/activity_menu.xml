@@ -33,7 +33,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:text="@string/arm_pedido"
-        android:typeface="monospace" />
+        android:typeface="monospace"
+        android:onClick="armar_pedidos"/>
 
     <ImageButton
         android:id="@+id/img_consultar_pedido"
@@ -58,7 +59,8 @@
         android:textStyle="bold"
         android:textSize="15sp"
         android:fontFamily="sans-serif-smallcaps"
-        android:typeface="monospace" />
+        android:typeface="monospace"
+        android:onClick="consultar_pedido"/>
 
     <ImageButton
         android:id="@+id/img_opciones_bodega"
@@ -83,7 +85,8 @@
         android:textStyle="bold"
         android:textSize="15sp"
         android:fontFamily="sans-serif-smallcaps"
-        android:typeface="monospace" />
+        android:typeface="monospace"
+        android:onClick="opciones_bodega"/>
 
     <ImageView
         android:id="@+id/login_registro"
@@ -91,6 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:layout_marginTop="40dp"
+        android:onClick="registro"
         android:layout_below="@id/opciones_bodega"
         android:layout_centerHorizontal="true"
         android:src="@drawable/login_registro" />
@@ -103,6 +107,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:text="@string/registro"
+        android:onClick="registro"
         android:textColor="@color/opciones_menu"
         android:textStyle="bold"
         android:textSize="15sp"

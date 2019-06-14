@@ -36,6 +36,12 @@ public class MenuAdmin extends Activity {
         finish();
     }
 
+    public void registro(View view){
+        Intent intent = new Intent(this, Registro.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

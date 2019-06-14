@@ -49,5 +49,14 @@
     <string name="title_activity_consultar_estado_pedido">ConsultarEstadoPedido</string>
     <string name="title_activity_listar_pedidos">Lista de pedidos</string>
 
+    <!-- registro -->
+    <string name="name">nombre</string>
+    <string name="email">correo electrónico</string>
+    <string name="password">contraseña</string>
+    <string name="phone">teléfono</string>
+    <string name="userzone">zona de usuario</string>
+    <string name="address">dirección</string>
+    <string name="rol">rol</string>
+    <string name="registrar">registrar</string>
 
 </resources>

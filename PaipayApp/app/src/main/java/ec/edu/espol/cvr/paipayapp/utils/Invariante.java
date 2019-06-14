@@ -79,4 +79,7 @@ public class Invariante {
     /* login -> roles de usuario*/
 
     public static final String TOKEN_PRUEBA = "token1";
+
+    /*registro.java*/
+    public static final String REGISTRO_OK = "Registro Satisfactorio.";
 }

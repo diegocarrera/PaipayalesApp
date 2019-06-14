@@ -58,7 +58,8 @@ public class Login extends Activity {
         editor.putString("ip", ip);
         editor.putInt("port", port);
         editor.apply();
-
+        ((TextView) findViewById(R.id.user)).setText("admin1@hotmail.com");
+        ((TextView) findViewById(R.id.password)).setText("adminadmin");
         return super.onCreateOptionsMenu(menu);
     }
 

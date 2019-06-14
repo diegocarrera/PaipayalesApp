@@ -54,6 +54,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     private String ip;
     private int port;
     private boolean test_mode;
+    int MY_PERMISSIONS_REQUEST_CAMERA = 5000;
 
     private Pedido pedido;
     private List<String> repartidores = new ArrayList<String>();
@@ -194,6 +195,10 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this,"camera permission granted",Toast.LENGTH_LONG).show();
             } else {
+                ActivityCompat.requestPermissions(InfoPedidoAdmin.this,
+                        new String[]{Manifest.permission.CAMERA},
+                        MY_PERMISSIONS_REQUEST_CAMERA);
+
                 Toast.makeText(this,"No tiene los permisos requeridos",Toast.LENGTH_LONG).show();
                 return ;
             }

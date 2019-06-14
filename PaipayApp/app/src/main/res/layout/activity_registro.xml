@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/main_background"
+    tools:context=".Registro">
+
+    <TextView
+        android:id="@+id/editText3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registro"
+        android:textSize="30dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/color_botones"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_marginTop="80dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="30dp">
+
+        <EditText
+            android:id="@+id/userInputname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/name"
+            android:gravity="center_horizontal"
+            android:textColor="@color/color_botones"/>
+
+        <EditText
+            android:id="@+id/userInputemail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:gravity="center_horizontal"
+            android:textColor="@color/color_botones"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/userInputpassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:gravity="center_horizontal"
+            android:textColor="@color/color_botones"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/userInputphoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/phone"
+            android:gravity="center_horizontal"
+            android:textColor="@color/color_botones"
+            android:inputType="phone" />
+
+        <Spinner
+            android:id="@+id/spinneruserZone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:background="@color/fondo_lista"
+            android:textColor="@color/color_botones"
+            android:textSize="16sp"
+            android:gravity="center_horizontal"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/userInputaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address"
+            android:gravity="center_horizontal"
+            android:textColor="@color/color_botones"
+            android:inputType="text" />
+
+        <Spinner
+            android:id="@+id/spinnerrol"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:background="@color/fondo_lista"
+            android:textColor="@color/color_botones"
+            android:textSize="16sp"
+            android:gravity="center_horizontal"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/finalizar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="registrar"
+            android:layout_marginVertical="30dp"
+            android:background="@color/color_botones"
+            android:text="@string/registrar" />
+    </LinearLayout>
+
+
+</RelativeLayout>
