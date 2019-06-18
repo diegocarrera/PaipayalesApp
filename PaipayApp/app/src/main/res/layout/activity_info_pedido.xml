@@ -113,7 +113,7 @@
             android:background="@color/color_botones"
             android:text="@string/finalizar"
             android:layout_marginHorizontal="25dp"
-            android:enabled="false"/>
+            android:enabled="true"/>
     </LinearLayout>
 
 </LinearLayout>

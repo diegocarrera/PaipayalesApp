@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     private String ip;
     private int port;
     private boolean test_mode;
-    int MY_PERMISSIONS_REQUEST_CAMERA = 5000;
+    int MY_PERMISSIONS_REQUEST_CAMERA = 0;
 
     private Pedido pedido;
     private List<String> repartidores = new ArrayList<String>();
@@ -66,6 +67,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     ListView listview_detalle_pedido;
     private DetallePedidoAdapter detalles_pedidoadapter;
     TextView viewid_pedido, viewCodigoBarra;
+    private Button finalizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,8 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         spinner = (Spinner) findViewById(R.id.spinnerRepartidor);
         spinner.setOnItemSelectedListener(this);
         listview_detalle_pedido = (ListView) findViewById(R.id.listadetallepedidos);
+        finalizar = (Button) findViewById(R.id.finalizar);
+        finalizar.setEnabled(false);
 
         Intent intent = getIntent();
         if(intent.getIntExtra("id_pedido",0) != 0){
@@ -107,7 +111,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
             update_list();
             update_repartidor();
         }
-        detalles_pedidoadapter = new DetallePedidoAdapter(this, detalles_pedido);
+        detalles_pedidoadapter = new DetallePedidoAdapter(this, detalles_pedido, finalizar);
         listview_detalle_pedido.setAdapter(detalles_pedidoadapter);
         detalles_pedidoadapter.notifyDataSetChanged();
     }
@@ -193,14 +197,14 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     public void AsociarTag(View view){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this,"camera permission granted",Toast.LENGTH_LONG).show();
+                //Toast.makeText(this,"camera permission granted",Toast.LENGTH_LONG).show();
             } else {
                 ActivityCompat.requestPermissions(InfoPedidoAdmin.this,
                         new String[]{Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_CAMERA);
 
                 Toast.makeText(this,"No tiene los permisos requeridos",Toast.LENGTH_LONG).show();
-                return ;
+                //return;
             }
         }
         IntentIntegrator integrator = new IntentIntegrator(InfoPedidoAdmin.this);
@@ -238,7 +242,6 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                             String codigo_barra = result.getContents();
                             pedido.setCodigo_barra(codigo_barra);
                             viewCodigoBarra.setText("Código de barra :" + " code:"+ codigo_barra);
-
                             Toast.makeText(InfoPedidoAdmin.this, Invariante.CODIGO_OK, Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -251,7 +254,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     public void finalizar(View view){
         boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
         if(detalles_pedidoadapter.armadoCompleto()){
-            if (pedido.getCodigo_barra() != null){
+            if (pedido.getCodigo_barra() != ""){
                 if(test_mode){
                     change_view();
                 }else{
@@ -291,7 +294,6 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
             parameters.put("id", pedido.getCodigo());
             parameters.put("barCode", pedido.getCodigo_barra());
             parameters.put("status", Invariante.ESTADO_ARMADO);
-            //FALTA ENVIAR FOTO
 
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             String server = Invariante.get_server(ip, port);
@@ -303,7 +305,6 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                         public void onResponse(JSONObject response) {
                             try {
                                 System.out.println(response.toString());
-                                // que retorna?
                                 change_view();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -349,7 +350,6 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                                 for (int i = 0; i < jsonarr.length(); i++) {
                                     JSONObject detalle_producto = jsonarr.getJSONObject(i);
                                     Producto producto = new Producto(detalle_producto.getString("id"));
-                                    //cambiar por nombre
                                     producto.setName(detalle_producto.getString("name"));
                                     detalles_pedido.add(new DetallePedido(producto, detalle_producto.getInt("qty")));
                                 }
