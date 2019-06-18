@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +19,13 @@ public class DetallePedidoAdapter extends ArrayAdapter<DetallePedido> {
     private ArrayList<DetallePedido> detallesPedidos;
     private Context context;
     private int contador;
+    private Button finalizar;
 
-    public DetallePedidoAdapter(Context context, ArrayList<DetallePedido> detallesPedidos){
+    public DetallePedidoAdapter(Context context, ArrayList<DetallePedido> detallesPedidos, Button finalizar){
         super(context,0, detallesPedidos);
         this.context = context;
         this.detallesPedidos = detallesPedidos;
+        this.finalizar = finalizar;
     }
 
     static class ViewHolder{
@@ -49,6 +52,7 @@ public class DetallePedidoAdapter extends ArrayAdapter<DetallePedido> {
                         detallesPedidos.get(position).set_selected(true);
                         contador++;
                     }
+                    finalizar.setEnabled(contador == detallesPedidos.size());
                 }
             });
         }
