@@ -258,7 +258,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                 if(test_mode){
                     change_view();
                 }else{
-                    update_api();
+                    update_api(Invariante.ESTADO_ARMADO);
                 }
             }else{
                 Toast.makeText(InfoPedidoAdmin.this, Invariante.ERROR_INCOMPLETO_TAG, Toast.LENGTH_SHORT).show();
@@ -269,7 +269,6 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
     }
 
     public void change_view(){
-        Toast.makeText(InfoPedidoAdmin.this, Invariante.FINALIZAR_OK, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, ArmarPedidos.class);
         startActivity(intent);
         finish();
@@ -280,7 +279,14 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void update_api(){
+    public void cancelar(View view){
+         /*
+        Funcion que se activa cuando el administrador presiona el boton de cancelar pedido.
+        */
+        update_api(Invariante.ESTADO_CANCELADO);
+    }
+
+    public void update_api(int estado){
         JSONObject parameters = new JSONObject();
         try {
             pedido.setRepartidor(spinner.getSelectedItem().toString());
@@ -288,12 +294,18 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
             if (data_repartidor.length > 0){
                 parameters.put("user", data_repartidor[0]);
             }else{
-                Toast.makeText(this, "No tiene asociado un repartidor", Toast.LENGTH_LONG).show();
-                return ;
+                if(estado != Invariante.ESTADO_CANCELADO){
+                    Toast.makeText(this, "No tiene asociado un repartidor", Toast.LENGTH_LONG).show();
+                    return ;
+                }
             }
             parameters.put("id", pedido.getCodigo());
-            parameters.put("barCode", pedido.getCodigo_barra());
-            parameters.put("status", Invariante.ESTADO_ARMADO);
+            if(estado == Invariante.ESTADO_CANCELADO){
+                parameters.put("barCode","-1");
+            }else{
+                parameters.put("barCode", pedido.getCodigo_barra());
+            }
+            parameters.put("status", estado);
 
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             String server = Invariante.get_server(ip, port);
@@ -304,7 +316,7 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                System.out.println(response.toString());
+                                Toast.makeText(InfoPedidoAdmin.this, "Operación realizada satisfactoriamente", Toast.LENGTH_LONG).show();
                                 change_view();
                             } catch (Exception e) {
                                 e.printStackTrace();
