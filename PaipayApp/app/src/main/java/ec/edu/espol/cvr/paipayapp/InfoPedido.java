@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,16 +33,22 @@ import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ec.edu.espol.cvr.paipayapp.adapters.DetallePedidoAdapter;
+import ec.edu.espol.cvr.paipayapp.adapters.DetallePedidoRepartidorAdapter;
+import ec.edu.espol.cvr.paipayapp.model.DetallePedido;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
+import ec.edu.espol.cvr.paipayapp.model.Producto;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
 
@@ -62,6 +69,11 @@ public class InfoPedido extends Activity {
     private Context mContext=InfoPedido.this;
     RequestQueue requestQueue;
     int MY_PERMISSIONS_REQUEST_CAMERA = 0;
+
+    ListView listview_detalle_pedido;
+    private DetallePedidoRepartidorAdapter detalles_pedidoadapter;
+    private ArrayList<DetallePedido> detalles_pedido = new ArrayList<DetallePedido>();
+
 
 
     @Override
@@ -85,6 +97,8 @@ public class InfoPedido extends Activity {
         cancelar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
         finalizar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
 
+        listview_detalle_pedido = (ListView) findViewById(R.id.listadetallepedidosrepartidor);
+
 
         Intent intent = getIntent();
         if (intent.getIntExtra("id_pedido", 0) != 0) {
@@ -96,9 +110,10 @@ public class InfoPedido extends Activity {
             view_direccion.setText(view_direccion.getText() + pedido.getDireccion());
             // Obtengo del servidor el nombre del cliente y otros datos del pedido...
             obtener_info_pedido(codigo);
-
-
         }
+        detalles_pedidoadapter = new DetallePedidoRepartidorAdapter(this, detalles_pedido);
+        listview_detalle_pedido.setAdapter(detalles_pedidoadapter);
+        detalles_pedidoadapter.notifyDataSetChanged();
     }
 
     @Override
@@ -275,7 +290,15 @@ public class InfoPedido extends Activity {
                                     view_cliente.setText(view_cliente.getText()+client_name);
                                     view_fecha.setText(view_fecha.getText()+pedido.getFecha());
                                     view_barras.setText(view_barras.getText()+codigo_barra);
-
+                                    String jsonstr = response.getString("products");
+                                    JSONArray jsonarr = new JSONArray(jsonstr);
+                                    for (int i = 0; i < jsonarr.length(); i++) {
+                                        JSONObject detalle_producto = jsonarr.getJSONObject(i);
+                                        Producto producto = new Producto(detalle_producto.getString("id"));
+                                        producto.setName(detalle_producto.getString("name"));
+                                        detalles_pedido.add(new DetallePedido(producto, detalle_producto.getInt("qty")));
+                                    }
+                                    detalles_pedidoadapter.notifyDataSetChanged();
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
