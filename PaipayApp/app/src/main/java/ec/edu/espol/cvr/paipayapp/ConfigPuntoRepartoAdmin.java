@@ -48,10 +48,6 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
         }else{
             update_option();
         }
-        String punto_reparto = sharedpreferences.getString(Invariante.PUNTO_REPARTO,"");
-        if(punto_reparto != ""){
-            spinner.setSelection(puntos_reparto.indexOf(punto_reparto));
-        }
     }
 
     @Override
@@ -92,6 +88,10 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
                                     puntos_reparto.add(name);
                                 }
                                 set_option();
+                                String punto_reparto = sharedpreferences.getString(Invariante.PUNTO_REPARTO,"");
+                                if(punto_reparto != ""){
+                                    spinner.setSelection(puntos_reparto.indexOf(punto_reparto));
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Toast.makeText(ConfigPuntoRepartoAdmin.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
