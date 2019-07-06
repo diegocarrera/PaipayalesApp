@@ -65,7 +65,7 @@ public class Registro extends Activity implements AdapterView.OnItemSelectedList
         address = (EditText) findViewById(R.id.userInputaddress);
 
 
-        phoneNumber.setText("+59342820236");
+        //phoneNumber.setText("+59342820236");
 
         user_zone.add("Seleccione una zona");
         update_user_zone();

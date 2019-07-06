@@ -35,8 +35,8 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
 public class Login extends Activity {
 
-    private int port = 8081;
-    private String ip = "142.93.244.249";//"; //192.168.0.8 maria belen //10.10.1.103
+    private int port = 9000;
+    private String ip = "10.10.1.131"; //142.93.244.249";//"; //192.168.0.8 maria belen //10.10.1.103
     private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
     Activity mContext;
@@ -58,8 +58,8 @@ public class Login extends Activity {
         editor.putString("ip", ip);
         editor.putInt("port", port);
         editor.apply();
-        ((TextView) findViewById(R.id.user)).setText("admin1@hotmail.com");
-        ((TextView) findViewById(R.id.password)).setText("adminadmin");
+        //((TextView) findViewById(R.id.user)).setText("admin1@hotmail.com");
+        //((TextView) findViewById(R.id.password)).setText("adminadmin");
         return super.onCreateOptionsMenu(menu);
     }
 

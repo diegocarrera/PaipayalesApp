@@ -21,7 +21,7 @@
     <string name="asociar_foto">Asociar foto</string>
     <string name="asociar_repartidor">Repartidor:</string>
     <string name="codigo_barras">Código de barras: </string>
-    <string name="finalizar">Armado Finalizado</string>
+    <string name="finalizar">Armado</string>
     <string name="cancelar">Cancelar Pedido</string>
 
     <!-- activity_info_pedido_repartidor -->
