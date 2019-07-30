@@ -35,8 +35,8 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
 public class Login extends Activity {
 
-    private int port = 9000;
-    private String ip = "10.10.1.131"; //142.93.244.249";//"; //192.168.0.8 maria belen //10.10.1.103
+    private int port = 8081;
+    private String ip = "142.93.244.249"; //142.93.244.249";//"; //192.168.0.8 maria belen //10.10.1.103
     private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
     Activity mContext;
@@ -46,6 +46,14 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mContext = this;
+
+        SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+        String ip_ = sharedpreferences.getString("ip","");
+        int port_ = sharedpreferences.getInt("port",0);
+        if(ip_ != "" && port != 0){
+            ip = ip_;
+            port = port_;
+        }
     }
 
     @Override
@@ -63,7 +71,7 @@ public class Login extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void verificarUsuario(View view) {
+    public void verificarUsuario(View view){
         String email = ((TextView) findViewById(R.id.user)).getText().toString().trim();
         String password = ((TextView) findViewById(R.id.password)).getText().toString().trim();
         if (!email.contains("@")){
@@ -121,11 +129,12 @@ public class Login extends Activity {
                         public void onResponse(JSONObject response) {
                             try {
                                 String rol = response.getString("role");
-                                System.out.println("ROOOOOL"+ rol);
+                                int id = response.getInt("id");
                                 //String rol = Invariante.USUARIO_ADMIN;
                                 String token = response.getString(Invariante.TOKEN);
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.putString(Invariante.TOKEN, token);
+                                editor.putInt("id", id);
                                 editor.apply();
                                 get_menu(rol);
                             } catch (JSONException e) {
@@ -206,6 +215,4 @@ public class Login extends Activity {
                 return true;
         }
     }
-
-
 }
