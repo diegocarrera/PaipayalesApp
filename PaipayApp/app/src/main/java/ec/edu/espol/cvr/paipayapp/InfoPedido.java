@@ -180,7 +180,7 @@ public class InfoPedido extends Activity {
                             String codigo_barra = result.getContents();
                             if (pedido.getCodigo_barra().equals(codigo_barra)) {
                                 Toast.makeText(InfoPedido.this, "Codigo de barras coincide. Entrega exitosa.", Toast.LENGTH_LONG).show();
-                                this.deshabilitarBotones();
+                                update_api(Invariante.ESTADO_ENTREGADO);
                             } else {
                                 Toast.makeText(InfoPedido.this, "El código de barras no coincide con el asociado al pedido. Este no es el pedido del cliente", Toast.LENGTH_LONG).show();
                             }
@@ -198,8 +198,9 @@ public class InfoPedido extends Activity {
         Funcion que se activa cuando el repartidor presiona el boton de finalizar ruta.
         */
         this.on_my_way = false;
-        this.deshabilitarBotones();
-        Toast.makeText(InfoPedido.this, "Ruta cancelada", Toast.LENGTH_LONG).show();
+        update_api(Invariante.ESTADO_CANCELADO);
+        //this.deshabilitarBotones();
+        //Toast.makeText(InfoPedido.this, "Ruta cancelada", Toast.LENGTH_LONG).show();
 
     }
 
@@ -620,6 +621,58 @@ public class InfoPedido extends Activity {
         finalizar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
         cancelar.setEnabled(false);
         cancelar.setBackgroundColor(getResources().getColor(R.color.verde_deshabilitado));
+    }
+
+    public void update_api(int estado){
+        JSONObject parameters = new JSONObject();
+        try {
+            SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+            String ip = sharedpreferences.getString("ip","");
+            int port = sharedpreferences.getInt("port",0);
+            int id = sharedpreferences.getInt("id",-1);
+            parameters.put("user", id);
+            parameters.put("id", pedido.getCodigo());
+            if(estado == Invariante.ESTADO_CANCELADO){
+                parameters.put("barCode","-1");
+            }else{
+                parameters.put("barCode", pedido.getCodigo_barra());
+            }
+            parameters.put("status", estado);
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            String server = Invariante.get_server(ip, port);
+            String url = server + "/api/v1/purchases/process-purchase/";
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, parameters, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                deshabilitarBotones();
+                                Toast.makeText(InfoPedido.this, "Operación realizada satisfactoriamente", Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            try {
+                                int code = error.networkResponse.statusCode;
+                                JSONObject json = new JSONObject(new String(error.networkResponse.data));
+                                String message = "Error " + String.valueOf(code) + json.getString("message");
+                                Toast.makeText(InfoPedido.this, message, Toast.LENGTH_SHORT).show();
+                            }catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(InfoPedido.this, Invariante.ERROR_LOGIN_RED_ACCESO, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            requestQueue.add(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }
