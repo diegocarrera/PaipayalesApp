@@ -39,16 +39,17 @@ Acontinuación se listan las funcionalidades desarrolladas para cada tipo de usu
 
 * Capturas de la aplicación
 ---------------------------
-1. Configurar red
-```
+
+#1. Configurar red
+
 ![Alt text](capturas/Comunes/1.ConfigurarRed.png "Configurar red")
 ![Alt text](capturas/Comunes/2.ConfigurarRedIPyPUERTO.png "Configurar red")
-```
-2. Usuario administrador. Menú
-```
+
+#2. Usuario administrador. Menú
+
 ![Alt text](capturas/Administrador/3.MenuAdministrador.png "Menú administrador")
-```
-3. Resto de capturas [Capturas](capturas/)
+
+#3. Resto de capturas [Capturas](capturas/)
 
 REFERENCIAS :
     [ Uso de lector RFID - TRIMBLE T41 ](https://github.com/CVR-FIEC-ESPOL/cnel-espol)
