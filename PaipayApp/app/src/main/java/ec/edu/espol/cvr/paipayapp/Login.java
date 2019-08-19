@@ -46,14 +46,19 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mContext = this;
-
+    /*
         SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
         String ip_ = sharedpreferences.getString("ip","");
         int port_ = sharedpreferences.getInt("port",0);
         if(ip_ != "" && port != 0){
             ip = ip_;
             port = port_;
-        }
+        }*/
+        /*
+        String rol = sharedpreferences.getString("rol","");
+        if(rol != ""){
+            get_menu(rol);
+        }*/
     }
 
     @Override
@@ -133,7 +138,9 @@ public class Login extends Activity {
                                 //String rol = Invariante.USUARIO_ADMIN;
                                 String token = response.getString(Invariante.TOKEN);
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString("rol",rol);
                                 editor.putString(Invariante.TOKEN, token);
+                                System.out.println(token);
                                 editor.putInt("id", id);
                                 editor.apply();
                                 get_menu(rol);
