@@ -39,14 +39,15 @@ Acontinuación se listan las funcionalidades desarrolladas para cada tipo de usu
 
 * Capturas de la aplicación
 ---------------------------
-1. Configurar red 
-<br>
+1. Configurar red
+```
 ![Alt text](capturas/Comunes/1.ConfigurarRed.png "Configurar red")
 ![Alt text](capturas/Comunes/2.ConfigurarRedIPyPUERTO.png "Configurar red")
-<br>
+```
 2. Usuario administrador. Menú
+```
 ![Alt text](capturas/Administrador/3.MenuAdministrador.png "Menú administrador")
-<br>
+```
 3. Resto de capturas [Capturas](capturas/)
 
 REFERENCIAS :
