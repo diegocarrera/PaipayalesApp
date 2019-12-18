@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  db:
+    image: mdillon/postgis
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 'paipay'
+    volumes:
+      - /root/postgrestData/:/var/lib/postgresql/data
