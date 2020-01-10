@@ -36,7 +36,7 @@ import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 public class Login extends Activity {
 
     private int port = 8081;
-    private String ip = "142.93.244.249"; //142.93.244.249";//"; //192.168.0.8 maria belen //10.10.1.103
+    private String ip = "192.168.0.9"; //142.93.244.249";//"; //192.168.0.8 maria belen //10.10.1.103
     private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
     Activity mContext;
@@ -46,14 +46,10 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mContext = this;
-    /*
+
         SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
-        String ip_ = sharedpreferences.getString("ip","");
-        int port_ = sharedpreferences.getInt("port",0);
-        if(ip_ != "" && port != 0){
-            ip = ip_;
-            port = port_;
-        }*/
+        String ip_ = sharedpreferences.getString("ip", ip);
+        int port_ = sharedpreferences.getInt("port", port);
         /*
         String rol = sharedpreferences.getString("rol","");
         if(rol != ""){
