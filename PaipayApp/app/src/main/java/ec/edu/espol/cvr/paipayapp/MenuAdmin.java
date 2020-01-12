@@ -9,6 +9,11 @@ import android.view.View;
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
+/**
+ * Esta activity es para manejar las opciones del menu del administrador.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class MenuAdmin extends Activity {
 
     @Override
@@ -17,7 +22,10 @@ public class MenuAdmin extends Activity {
         setContentView(R.layout.activity_menu);
     }
 
-
+    /**
+     * Cuando da tap en armar pedidos
+     * @param view
+     */
     public void armar_pedidos(View view){
         Intent intent = new Intent(this, ArmarPedidos.class);
         startActivity(intent);
@@ -47,7 +55,7 @@ public class MenuAdmin extends Activity {
         super.onBackPressed();
         SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.clear(); // o recibir y pasar el user, para no iniciar sesion otra vez?
+        //editor.clear(); // o recibir y pasar el user, para no iniciar sesion otra vez?
         editor.apply();
         startActivity(new Intent(this, Login.class));
         finish();

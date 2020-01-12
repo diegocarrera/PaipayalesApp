@@ -1,13 +1,11 @@
 package ec.edu.espol.cvr.paipayapp;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -27,16 +25,16 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ec.edu.espol.cvr.paipayapp.model.User;
-
-
-
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
+/**
+ * Esta activity es para manejar el inicio de sesión y la configuración de ip y puerto.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class Login extends Activity {
-
     private int port = 8081;
-    private String ip = "192.168.0.9"; //142.93.244.249";//"; //192.168.0.8 maria belen //10.10.1.103
+    private String ip = "192.168.100.8";
     private boolean test_mode = false;  //sacar test
     private SharedPreferences sharedpreferences;
     Activity mContext;
@@ -47,9 +45,9 @@ public class Login extends Activity {
         setContentView(R.layout.activity_login);
         mContext = this;
 
-        SharedPreferences sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
-        String ip_ = sharedpreferences.getString("ip", ip);
-        int port_ = sharedpreferences.getInt("port", port);
+        sharedpreferences = getSharedPreferences(Invariante.MyPREFERENCES, this.MODE_PRIVATE);
+        ip = sharedpreferences.getString("ip", ip);
+        port = sharedpreferences.getInt("port", port);
         /*
         String rol = sharedpreferences.getString("rol","");
         if(rol != ""){
@@ -67,11 +65,13 @@ public class Login extends Activity {
         editor.putString("ip", ip);
         editor.putInt("port", port);
         editor.apply();
-        //((TextView) findViewById(R.id.user)).setText("admin1@hotmail.com");
-        //((TextView) findViewById(R.id.password)).setText("adminadmin");
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Funcion que se ejecuta cuando se da tap en boton iniciar sesión
+     * @param view
+        */
     public void verificarUsuario(View view){
         String email = ((TextView) findViewById(R.id.user)).getText().toString().trim();
         String password = ((TextView) findViewById(R.id.password)).getText().toString().trim();
@@ -101,6 +101,10 @@ public class Login extends Activity {
         finish();
     }
 
+    /**
+     * Método que redireccionar a específica activity deacuerdo al rol del usuario que ha iniciado sesión-
+     * @param rol rol del usuario que ha iniciado sesión
+    */
     public void get_menu(String rol){
         Intent intent;
         if (rol.equals(Invariante.USUARIO_ADMIN)){
@@ -115,6 +119,11 @@ public class Login extends Activity {
         finish();
     }
 
+    /**
+     * Funcion consulta al api y devuelve el token y rol del usuario
+     * @param email correo del usuario
+     * @param password contraseña del usuario
+     */
     public void api_login(String email, String password){
         JSONObject parameters = new JSONObject();
         try {
@@ -166,6 +175,10 @@ public class Login extends Activity {
         }
     }
 
+    /**
+     * Funcion que actualiza ip y puertos
+     * @param item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -176,6 +189,8 @@ public class Login extends Activity {
                 alertDialogBuilderUserInput.setView(mView);
                 final EditText userInputIP = (EditText) mView.findViewById(R.id.userInputIp);
                 final EditText userInputPort = (EditText) mView.findViewById(R.id.userInputPort);
+                ip = sharedpreferences.getString("ip", ip);
+                port = sharedpreferences.getInt("port", port);
 
                 userInputIP.setText(ip);
                 userInputPort.setText(String.valueOf(port));

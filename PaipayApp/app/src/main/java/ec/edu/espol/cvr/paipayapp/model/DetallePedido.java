@@ -1,13 +1,10 @@
 package ec.edu.espol.cvr.paipayapp.model;
 
-import ec.edu.espol.cvr.paipayapp.utils.RequestApi;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Esta clase define los componentes de un Items de un Pedido.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class DetallePedido {
     private Producto producto;
     private float cantidad;

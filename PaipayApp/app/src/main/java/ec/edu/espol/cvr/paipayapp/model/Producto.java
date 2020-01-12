@@ -1,5 +1,10 @@
 package ec.edu.espol.cvr.paipayapp.model;
 
+/**
+ * Esta clase define los componentes de un Producto.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class Producto {
     private String id;
     private String name;

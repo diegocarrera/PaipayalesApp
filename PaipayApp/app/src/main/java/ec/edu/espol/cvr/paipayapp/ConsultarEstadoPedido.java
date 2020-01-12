@@ -3,9 +3,7 @@ package ec.edu.espol.cvr.paipayapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,10 +19,13 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
+/**
+ * Esta activity es para manejar consultas del estado de un pedido.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class ConsultarEstadoPedido extends Activity {
     private SharedPreferences sharedpreferences;
     private EditText codigo;
@@ -41,6 +42,10 @@ public class ConsultarEstadoPedido extends Activity {
         repartidorPedido = (TextView) findViewById(R.id.pedidoInfoRepartidor);
     }
 
+    /**
+     * Método que se ejecuta cuando se da tap en el boton de buscar.
+     * @param view
+     */
     public void consultar_pedido(View view){
         String ip = sharedpreferences.getString("ip", "");
         int port = sharedpreferences.getInt("port", 0);
@@ -99,6 +104,10 @@ public class ConsultarEstadoPedido extends Activity {
         finish();
     }
 
+    /**
+     * Método para borrar los resultados de consultas previas.
+     * @param message cadena de texto vacía.
+     */
     public void clean(String message){
         infoPedido.setText(message);
         estadoPedido.setText("");

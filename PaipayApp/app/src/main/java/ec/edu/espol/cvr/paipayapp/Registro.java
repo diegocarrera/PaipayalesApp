@@ -1,10 +1,8 @@
 package ec.edu.espol.cvr.paipayapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +28,11 @@ import java.util.List;
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
+/**
+ * Esta activity es para manejar el registro de nuevos usuarios.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class Registro extends Activity implements AdapterView.OnItemSelectedListener{
     private SharedPreferences sharedpreferences;
     private String ip;
@@ -64,16 +67,15 @@ public class Registro extends Activity implements AdapterView.OnItemSelectedList
         phoneNumber = (EditText) findViewById(R.id.userInputphoneNumber);
         address = (EditText) findViewById(R.id.userInputaddress);
 
-
-        //phoneNumber.setText("+59342820236");
-
         user_zone.add("Seleccione una zona");
         update_user_zone();
         user_rol.add("Seleccione un rol");
         update_rol();
     }
 
-    /* función para retroceder al menú del administrador*/
+    /**
+     *  Función para retroceder al menú del administrador
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -92,7 +94,10 @@ public class Registro extends Activity implements AdapterView.OnItemSelectedList
         // TODO Auto-generated method stub
     }
 
-    /* realizar una solicitud de tipo post al api para registrar la información de un usuario nuevo */
+    /**
+     * Realizar una solicitud de tipo post al api para registrar la información de un usuario nuevo
+     * @param view
+     */
     public void registrar(View view){
         JSONObject parameters = new JSONObject();
         try {
@@ -158,7 +163,9 @@ public class Registro extends Activity implements AdapterView.OnItemSelectedList
         finish();
     }
 
-    /* consume el api para obtener una la lista de zonas de usuarios registradas  */
+    /**
+     * Consume el api para obtener una la lista de zonas de usuarios registradas
+     */
     public void update_user_zone(){
         if(ip!= "" && port != 0){
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -200,7 +207,9 @@ public class Registro extends Activity implements AdapterView.OnItemSelectedList
         }
     }
 
-    /* función que define los roles que se pueden registrar en el sistema */
+    /**
+     * Función que define los roles que se pueden registrar en el sistema
+     */
     public void update_rol(){
         user_rol.add("Administrador");
         user_rol.add("Cliente");
@@ -210,11 +219,12 @@ public class Registro extends Activity implements AdapterView.OnItemSelectedList
         spinnerRol.setAdapter(dataAdapter);
     }
 
-    /*  configuración spinner de las zonas de usuario */
+    /**
+     * Configuración spinner de las zonas de usuario
+     */
     public void set_option(){
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(Registro.this, R.layout.spinner, user_zone);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerZone.setAdapter(dataAdapter);
     }
-
 }

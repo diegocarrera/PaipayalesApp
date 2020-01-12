@@ -1,15 +1,13 @@
 package ec.edu.espol.cvr.paipayapp.model;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import ec.edu.espol.cvr.paipayapp.utils.RequestApi;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Esta clase define los componentes de un Pedido.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class Pedido {
     private String fecha;
     private int codigo;

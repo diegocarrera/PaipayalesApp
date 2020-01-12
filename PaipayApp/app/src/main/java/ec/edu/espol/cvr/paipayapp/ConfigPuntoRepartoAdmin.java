@@ -26,6 +26,11 @@ import java.util.List;
 
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
+/**
+ * Esta activity es para configurar un punto de reparto.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnItemSelectedListener {
     private Spinner spinner;
     private SharedPreferences sharedpreferences;
@@ -50,6 +55,13 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
         }
     }
 
+    /**
+     * Método que llama cada vez que se cambiar de punto de reparto.
+     * @param parent lista que se modificó, en caso de tener varias listas.
+     * @param view
+     * @param position identificador del punto de reparto seleccionado.
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
@@ -69,6 +81,9 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
         spinner.setAdapter(dataAdapter);
     }
 
+    /**
+     * Método para actualizar lista de puntos de reparto.
+     */
     public void update_option(){
         String ip = sharedpreferences.getString("ip","");
         int port = sharedpreferences.getInt("port",0);
@@ -124,10 +139,13 @@ public class ConfigPuntoRepartoAdmin extends Activity implements AdapterView.OnI
         finish();
     }
 
+    /**
+     * Método que ejecuta cuando se da tap al botón guardar.
+     * @param view
+     */
     public void guardar(View view){
         Intent intent = new Intent(this, MenuAdmin.class);
         startActivity(intent);
         finish();
-
     }
 }

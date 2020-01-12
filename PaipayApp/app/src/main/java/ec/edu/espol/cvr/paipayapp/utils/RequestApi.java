@@ -14,8 +14,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import ec.edu.espol.cvr.paipayapp.model.User;
-
+/**
+ * Esta clase define los componentes para realizar un http request.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class RequestApi {
     private static String ip;
     private static int port;
@@ -28,13 +31,14 @@ public class RequestApi {
         server = "http://" + ip + ":" + port;
     }
 
-
+    /**
+     * Funcion que hace request al API del servidor para el login
+     * @param email correo del usuario que desea iniciar sesión
+     * @param password contraseña del usuario que desea iniciar sesión
+     * @return json con mensaje de error o con el rol y token.
+     */
     public static JSONObject login(String email, String password){
         JSONObject respuesta = new JSONObject();
-        /*Funcion que hace request al API del servidor para el login
-        Parametros: email, password
-        Respuesta: rol, user_id, token. Estos datos se encapsulan en una clase User */
-
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("email", email);
         parameters.put("password", password);
@@ -56,6 +60,13 @@ public class RequestApi {
         return respuesta;
     }
 
+    /**
+     * Funcion que hace cualquier tipo de request al API del servidor
+     * @param path url o end-point del api especifica.
+     * @param type método de request. Soportados: GET y POST.
+     * @param parameters parámetros necesarios por el api para recibir la correcta informacion de retorno.
+     * @return  con mensaje de error o con la información/acción requerida.
+     */
     public static JSONObject request(String path, String type, Map<String, String> parameters){
         JSONObject json = new JSONObject();
         String error = null;
@@ -112,6 +123,14 @@ public class RequestApi {
         return json;
     }
 
+    /**
+     * Funcion que hace cualquier tipo de request al API del servidor pero agregar headers
+     * @param path url o end-point del api especifica.
+     * @param type método de request. Soportados: GET y POST.
+     * @param parameters parámetros necesarios por el api para recibir la correcta informacion de retorno.
+     * @param headers  encabezados como token que se desean enviar en el request.
+     * @return json con mensaje de error o con la información/acción requerida.
+     */
     public static JSONObject request_with_headers(String path, String type, Map<String, String> parameters, Map<String, String> headers){
         JSONObject json = new JSONObject();
         String error = null;

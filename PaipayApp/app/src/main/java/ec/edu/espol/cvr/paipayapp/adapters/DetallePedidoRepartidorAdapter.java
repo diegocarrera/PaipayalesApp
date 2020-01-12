@@ -5,15 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 
 import ec.edu.espol.cvr.paipayapp.R;
 import ec.edu.espol.cvr.paipayapp.model.DetallePedido;
 
+/**
+ * Esta clase define el adaptador para las listview para detallar cada elemento de un pedido en la vista de repartidor
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class DetallePedidoRepartidorAdapter extends ArrayAdapter<DetallePedido> {
     private ArrayList<DetallePedido> detallesPedidos;
     private Context context;

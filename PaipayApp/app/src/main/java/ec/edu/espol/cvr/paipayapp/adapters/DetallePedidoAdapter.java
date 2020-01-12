@@ -8,14 +8,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import ec.edu.espol.cvr.paipayapp.R;
 import ec.edu.espol.cvr.paipayapp.model.DetallePedido;
 
 import java.util.ArrayList;
 
+/**
+ * Esta clase define el adaptador para las listview para detallar cada elemento de un pedido en la vista de administrador.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class DetallePedidoAdapter extends ArrayAdapter<DetallePedido> {
+
     private ArrayList<DetallePedido> detallesPedidos;
     private Context context;
     private int contador;
@@ -64,6 +69,10 @@ public class DetallePedidoAdapter extends ArrayAdapter<DetallePedido> {
         return convertView;
     }
 
+    /**
+     * Método que permite saber si un pedido esta completo o no. Revisa si todos los CheckBox en cada items del pedido están marcados.
+     * @return True cuando todos los items del pedidos(CheckBox) están marcados.
+     */
     public boolean armadoCompleto(){
         return contador == detallesPedidos.size();
     }

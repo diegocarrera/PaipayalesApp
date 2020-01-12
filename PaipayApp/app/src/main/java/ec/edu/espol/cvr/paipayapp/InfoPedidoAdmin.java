@@ -50,6 +50,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Esta activity es para manejar la información de un específico pedido.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelectedListener{
     private SharedPreferences sharedpreferences;
     private String ip;
@@ -134,6 +139,9 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         spinner.setAdapter(dataAdapter);
     }
 
+    /**
+     * Función que actualiza la lista de repartidores
+     */
     public void update_repartidor(){
         if(ip!= "" && port != 0){
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -184,7 +192,10 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         finish();
     }
 
-    /*----------------------------- asociar ----------------------------------------*/
+    /**
+     * Función para tomar una foto
+     * @param view
+     */
     public void tomarFoto(View view){
         Intent tomar_foto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (tomar_foto.resolveActivity(getPackageManager()) != null) {
@@ -194,6 +205,10 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         }
     }
 
+    /**
+     * Función para escanear un código de barras.
+     * @param view
+     */
     public void AsociarTag(View view){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -202,7 +217,6 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                 ActivityCompat.requestPermissions(InfoPedidoAdmin.this,
                         new String[]{Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_CAMERA);
-
                 Toast.makeText(this,"No tiene los permisos requeridos",Toast.LENGTH_LONG).show();
                 //return;
             }
@@ -216,6 +230,12 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         integrator.initiateScan();
     }
 
+    /**
+     * Método que se llama despues de tomar una foto o escanear un código de barras.
+     * @param requestCode identificador del tipo de operación que se realizó.
+     * @param resultCode resultado de la operación
+     * @param data información resultante de la operación.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -251,6 +271,10 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         }
     }
 
+    /**
+     * Función que se ejecuta cuando se da tap en el botón guardar. Actualiza el estado del pedido
+     * @param view
+     */
     public void finalizar(View view){
         boolean test_mode = sharedpreferences.getBoolean("test_mode", true);
         if(detalles_pedidoadapter.armadoCompleto()){
@@ -268,6 +292,9 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         }
     }
 
+    /**
+     * Función para cambiar de activity cuando se termina de armar un pedido.
+     */
     public void change_view(){
         Intent intent = new Intent(this, ArmarPedidos.class);
         startActivity(intent);
@@ -279,13 +306,18 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    /**
+     * Funcion que se activa cuando el administrador presiona el boton de cancelar pedido.
+     * @param view
+     */
     public void cancelar(View view){
-         /*
-        Funcion que se activa cuando el administrador presiona el boton de cancelar pedido.
-        */
         update_api(Invariante.ESTADO_CANCELADO);
     }
 
+    /**
+     * Funcion para actualizar el estado de un pedido.
+     * @param estado nuevo estado del pedido
+     */
     public void update_api(int estado){
         JSONObject parameters = new JSONObject();
         try {
@@ -344,6 +376,9 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
         }
     }
 
+    /**
+     * Funcion para obtener información especifica de un pedido.
+     */
     void update_list(){
         if(test_mode){
 
@@ -391,7 +426,5 @@ public class InfoPedidoAdmin extends Activity implements AdapterView.OnItemSelec
                     });
             requestQueue.add(jsonObjectRequest);
         }
-
     }
-
 }

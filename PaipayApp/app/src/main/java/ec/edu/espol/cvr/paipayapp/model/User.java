@@ -1,5 +1,9 @@
 package ec.edu.espol.cvr.paipayapp.model;
-
+/**
+ * Esta clase define la información de un Usuario.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class User {
     String rol, token;
 
@@ -23,6 +27,5 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
-
 
 }

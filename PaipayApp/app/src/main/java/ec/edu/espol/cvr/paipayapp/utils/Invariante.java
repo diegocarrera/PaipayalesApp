@@ -1,5 +1,10 @@
 package ec.edu.espol.cvr.paipayapp.utils;
 
+/**
+ * Esta clase define todas las cadenas de caracteres fijos que se utilizarán en la aplicación.
+ * @author: Mauricio Leiton Lázaro(mdleiton)
+ * @version: 1.0
+ */
 public class Invariante {
     public static final String MyPREFERENCES = "LoginPaipay";
     public static final String format_date = "dd/MM/yyyy";
@@ -9,9 +14,6 @@ public class Invariante {
     public static final String ROUTE = "route_id";
     public static final int LOCATION_INTERVAL_MIN = 0; //8000
     public static final int LOCATION_DISTANCE_MIN = 0;
-
-
-
 
     /*Login.java*/
     public static final String ERROR_CORREO = "Correo no válido.";
@@ -77,7 +79,6 @@ public class Invariante {
     }
 
     /* login -> roles de usuario*/
-
     public static final String TOKEN_PRUEBA = "token1";
 
     /*registro.java*/

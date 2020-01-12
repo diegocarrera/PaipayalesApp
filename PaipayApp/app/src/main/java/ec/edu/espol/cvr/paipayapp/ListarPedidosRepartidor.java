@@ -27,21 +27,17 @@ import ec.edu.espol.cvr.paipayapp.adapters.PedidoAdapter;
 import ec.edu.espol.cvr.paipayapp.model.Pedido;
 import ec.edu.espol.cvr.paipayapp.utils.Invariante;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Actividad que muestra la lista de pedidos asociadas a un repartidor.
+ * Si un repartidor presiona sobre un pedido, se debe llamar a la actividad InfoPedido
+ * @author: Maria Belen Guaranda
+ * @version: 1.0
+ */
 public class ListarPedidosRepartidor extends Activity {
-    /*
-        Actividad que muestra la lista de pedidos asociadas a un repartidor.
-        Si un repartidor presiona sobre un pedido, se debe llamar a la actividad InfoPedido
-    */
-
     private ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
     private PedidoAdapter pedidoadapter;
     private ListView listview_pedido;
@@ -71,7 +67,7 @@ public class ListarPedidosRepartidor extends Activity {
             }
         });
 
-            listview_pedido = (ListView) findViewById(R.id.listapedidos);
+        listview_pedido = (ListView) findViewById(R.id.listapedidos);
         listview_pedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -107,12 +103,12 @@ public class ListarPedidosRepartidor extends Activity {
         finish();
     }
 
+    /**
+    * Funcion que actualiza la lista de los pedidos.
+     * Hace un requerimiento al servidor usando Pedido.get_pedidos_por_repartidor()
+     * para traerse la lista de pedidos relacionados a un repartidor
+     * */
     void update_list(){
-        /*
-            Funcion que actualiza la lista de los pedidos.
-            Hace un requerimiento al servidor usando Pedido.get_pedidos_por_repartidor()
-             para traerse la lista de pedidos relacionados a un repartidor
-        */
         final String user_token = sharedpreferences.getString(Invariante.TOKEN,"");
 
         try {
