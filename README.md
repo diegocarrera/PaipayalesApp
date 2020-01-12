@@ -1,6 +1,8 @@
 Proyecto comunitarias - App para "trabajadores" 
 ===============================================
 
+[ Repositorio actualizado: ](https://github.com/paipayespol)
+
 Version 1.0 19/08/2019
 ----------------------
 
